@@ -1,1 +1,92 @@
-Testing testing 123
+\section{Large Language Models}
+
+\textit{A basic introduction to large language models that are transformer based. Including simple description of self attention, along with training process of pretraining and next token prediction.}
+
+\section{Constitutional AI}
+
+\subsection{What is Constitutional AI?}
+
+Constitutional AI (CAI) is a method of post-training a large language model to be aligned to set of principles that are outlined in simple natural language document called a constitution \cite{baiConstitutionalAIHarmlessness2022}. Importantly it works without the need for human labelling of data common in other alignment methods such as RLHF and DPO \cite{ouyangTrainingLanguageModels2022, rafailovDirectPreferenceOptimization2024}. INstead of human labelling CAI uses the model itself to generate feedback on its outputs based on the principles outlined in the constitution, this feedback is then used to further train the model to align it to the constitution.
+
+
+\subsection{How does Constitutional AI work?}
+
+CAI is a process that takes in a constitution, a pre-trained language model, and a dataset of prompts and outputs a model that is aligned to the constitution. The process consists of three main steps: self generative and supervised fine-tuning (SFT), preference modelling (PM), and reinforcement learning with human feedback (RLHF) \cite{baiConstitutionalAIHarmlessness2022}. The constitution was generated in an adhoc manner by the authors of \cite{baiConstitutionalAIHarmlessness2022} and consists of a set of principles that aim to make the model's outputs more helpful, honest, and harmless.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+    scale=0.7, transform shape,
+    node distance = 2cm and 2.5cm,
+    every node/.style={font=\small},
+    diamond/.style={draw, shape=diamond, aspect=1.5, align=center, fill=blue!15, blur shadow},
+    rect/.style={draw, rectangle, rounded corners=6pt, align=center, fill=red!15, blur shadow},
+    smallrect/.style={draw, rectangle, rounded corners=6pt, align=center, fill=yellow!20, minimum width=2.2cm},
+    process/.style={draw, rectangle, rounded corners=6pt, align=center, fill=green!20, blur shadow},
+    stage/.style={draw, rectangle, rounded corners=6pt, align=center, fill=purple!20, blur shadow},
+    arrow/.style={-Latex, thick}
+]
+
+% Top left diamond
+\node[diamond] (input) {Input pretrained\\Model};
+
+% Harmful sample generation
+\node[rect, right=of input] (redteam1) {Generate Responses\\to ``Red Teaming''\\Prompts Eliciting\\Harmful Samples};
+
+% response critique revision boxes
+\node[smallrect, above right=0cm and 1.5cm of redteam1] (resp) {Response};
+\node[smallrect, below=0.3cm of resp] (crit) {Critique};
+\node[smallrect, below=0.3cm of crit] (rev) {Revision};
+
+% SL-CAI diamond
+\node[diamond, right=4.8cm of redteam1] (slcai) {Finetuned\\SL-CAI\\Model};
+
+% Lower left harmful pairs
+\node[rect, below=2cm of input] (redteam2) {Generate Responses\\to ``Red Teaming''\\Prompts Eliciting\\Pairs of Samples};
+
+% constitutional AI feedback
+\node[stage, right=1cm of redteam2] (cai) {Constitutional AI Feedback\\for Self-Improvement};
+
+% preference model
+\node[process, right=1cm of cai] (pm) {Finetuned\\Preference Model\\(PM)};
+
+% RL-AIF model block
+\node[process, right=1cm of pm] (rlaif) {RLAIF Training with\\PM + SL-CAI\\Models};
+
+% final RL-CAI
+\node[diamond, right=1cm of rlaif] (final) {Final\\RL-CAI\\Model};
+
+% arrows
+\draw[arrow] (input) -- (redteam1);
+
+\draw[arrow] (redteam2) -- (cai);
+\draw[arrow] (cai) -- (pm);
+\draw[arrow] (pm) -- (rlaif);
+
+\draw[arrow] (slcai) -- (rlaif);
+\draw[arrow] (slcai) -- (redteam2);
+\draw[arrow] (rlaif) -- (final);
+
+% arrows from critique-response-revision group
+\draw[arrow] (redteam1.east) -- ++(0.8,0) |- (resp.west);
+\draw[arrow] (resp) -- (crit);
+\draw[arrow] (crit) -- (rev);
+\draw[arrow] (rev.east) -- ++(0.7,0) |- (slcai.north);
+
+\end{tikzpicture}
+
+\label{fig:cai_process}
+\caption{Overview of Constitutional AI process, adapted from \cite{baiConstitutionalAIHarmlessness2022}}
+\end{figure}
+
+\subsection{Supervised learning on revised responses}
+
+The first stage of the process involves taking the pre-trained model and using it to generate responses to a set of prompts. These prompts are designed to elicit harmful behavior. As the pre-trained model is designed to be helpful it will likely generate harmful responses to these prompts. These responses are then critiqued by the model itself using principles outlined in the constitution, only a subset of which are used for each response. The critique is then used to revise the original response to make it more aligned to the constitution. This process of generating responses, critiquing them, and revising them is done iteratively to create a dataset of revised responses. This dataset is then used to fine-tune the pre-trained model using self-supervised learning to create a model called the SL-CAI model.
+
+\subsection{Reinforcement learning with AI feedback}
+
+The next step involves using the SL-CAI model to generate pairs of responses to a set of prompts (overlapping with before or not). Then using the constitution the SL-CAI model is used to provide feedback on which of the two responses is better aligned to the constitution. This feedback is then used to fine-tune a preference model (PM) that can predict which of two responses is better aligned to the constitution. Finally the PM and SL-CAI models are used together to do reinforcement learning in style of RFHL \cite{ouyangTrainingLanguageModels2022} to generate the final model RL-CAI. This final model is now aligned to the constitution without any human labelling of data. In the setup used in \cite{baiConstitutionalAIHarmlessness2022} the authors did in fact use some labels from human labelers which were used to provide the helpfulness signal in the preference model training, however in principle this step could of been done with AI.
+
+\subsection{Relevance}
+
+In the context of the time that this paper was to address the key dilemma of helpfulness vs harmlessness in large language models. The goal being to make a model that is both helpful and harmless, without sacrificing one for the other. Further research has expanded the horizons to be concerned with more than just harmfulness vs helpfulness trade off. Along with this there are concerns that methods like CAI and RLHF are simply superficially aligning models to avoid harmful outputs rather than deeply aligning to the values we want \cite{greenblattAlignmentFakingLarge2024a,hubingerSleeperAgentsTraining2024}. As hinted at by the authors in \cite{baiConstitutionalAIHarmlessness2022}, there is room for improvement in the CAI method to make it focus on more than just harmlessness vs helpfulness. This can be done by modifying the constitutions to include more diverse principles as well as modifying the red teaming prompts to target more diverse scenarios. In this way we can see how elements of CAI can be built upon by generating these diverse constitutions and red teaming prompts in a representative manner to create models aligned to a representative set of values.

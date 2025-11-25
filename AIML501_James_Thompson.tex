@@ -9,11 +9,27 @@
 
 \usepackage{url} % for typesetting urls
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shadows.blur}
+
 %  We don't want figures to float so we define
 %
 \newfloat{fig}{thp}{lof}[chapter]
 \floatname{fig}{Figure}
 
+% cfigure command:
+% Usage: \cfigure[placement]{filename}{caption}
+% - placement (optional): LaTeX float placement like htbp (default ht b p)
+% - filename: the figure file name located inside the 'figures/' directory
+% - caption: caption for the figure
+\newcommand{\cfigure}[3][htbp]{%
+   \begin{figure}[#1]
+      \centering
+      \includegraphics[width=0.8\textwidth]{figures/#2}
+      \label{fig:#2}
+      \caption{#3}
+   \end{figure}%
+}
 %% These are standard LaTeX definitions for the document
 %%
 \title{Project title not yet defined}
