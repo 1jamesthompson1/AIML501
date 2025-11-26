@@ -183,6 +183,24 @@
   keywords = {civic-tech,data-science,deliberative-democracy,participatory-democracy}
 }
 
+@misc{ethayarajhKTOModelAlignment2024,
+  title = {{{KTO}}: {{Model Alignment}} as {{Prospect Theoretic Optimization}}},
+  shorttitle = {{{KTO}}},
+  author = {Ethayarajh, Kawin and Xu, Winnie and Muennighoff, Niklas and Jurafsky, Dan and Kiela, Douwe},
+  year = 2024,
+  month = nov,
+  number = {arXiv:2402.01306},
+  eprint = {2402.01306},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2402.01306},
+  urldate = {2025-11-26},
+  abstract = {Kahneman \& Tversky's \$\textbackslash textit\textbraceleft prospect theory\textbraceright\$ tells us that humans perceive random variables in a biased but well-defined manner (1992); for example, humans are famously loss-averse. We show that objectives for aligning LLMs with human feedback implicitly incorporate many of these biases -- the success of these objectives (e.g., DPO) over cross-entropy minimization can partly be ascribed to them belonging to a family of loss functions that we call \$\textbackslash textit\textbraceleft human-aware losses\textbraceright\$ (HALOs). However, the utility functions these methods attribute to humans still differ from those in the prospect theory literature. Using a Kahneman-Tversky model of human utility, we propose a HALO that directly maximizes the utility of generations instead of maximizing the log-likelihood of preferences, as current methods do. We call this approach KTO, and it matches or exceeds the performance of preference-based methods at scales from 1B to 30B, despite only learning from a binary signal of whether an output is desirable. More broadly, our work suggests that there is no one HALO that is universally superior; the best loss depends on the inductive biases most appropriate for a given setting, an oft-overlooked consideration.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/JAASGP9E/Ethayarajh et al. - 2024 - KTO Model Alignment as Prospect Theoretic Optimization.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/F4XXTL33/2402.html}
+}
+
 @inproceedings{ganguliPredictabilitySurpriseLarge2022,
   title = {Predictability and {{Surprise}} in {{Large Generative Models}}},
   booktitle = {2022 {{ACM Conference}} on {{Fairness Accountability}} and {{Transparency}}},
@@ -215,6 +233,24 @@
   archiveprefix = {arXiv},
   keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/ADRTW7G7/Greenblatt et al. - 2024 - Alignment faking in large language models.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/ZP5IAKL2/2412.html}
+}
+
+@misc{hongORPOMonolithicPreference2024,
+  title = {{{ORPO}}: {{Monolithic Preference Optimization}} without {{Reference Model}}},
+  shorttitle = {{{ORPO}}},
+  author = {Hong, Jiwoo and Lee, Noah and Thorne, James},
+  year = 2024,
+  month = mar,
+  number = {arXiv:2403.07691},
+  eprint = {2403.07691},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2403.07691},
+  urldate = {2025-11-26},
+  abstract = {While recent preference alignment algorithms for language models have demonstrated promising results, supervised fine-tuning (SFT) remains imperative for achieving successful convergence. In this paper, we study the crucial role of SFT within the context of preference alignment, emphasizing that a minor penalty for the disfavored generation style is sufficient for preference-aligned SFT. Building on this foundation, we introduce a straightforward and innovative reference model-free monolithic odds ratio preference optimization algorithm, ORPO, eliminating the necessity for an additional preference alignment phase. We demonstrate, both empirically and theoretically, that the odds ratio is a sensible choice for contrasting favored and disfavored styles during SFT across the diverse sizes from 125M to 7B. Specifically, fine-tuning Phi-2 (2.7B), Llama-2 (7B), and Mistral (7B) with ORPO on the UltraFeedback alone surpasses the performance of state-of-the-art language models with more than 7B and 13B parameters: achieving up to 12.20\% on \$\textbackslash text\textbraceleft AlpacaEval\textbraceright\_\textbraceleft 2.0\textbraceright\$ (Figure 1), 66.19\% on IFEval (instruction-level loose, Table 6), and 7.32 in MT-Bench (Figure 12). We release code and model checkpoints for Mistral-ORPO-\${$\alpha\$$} (7B) and Mistral-ORPO-\${$\beta\$$} (7B).},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/7LCH48AE/Hong et al. - 2024 - ORPO Monolithic Preference Optimization without Reference Model.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/REFAWIXA/2403.html}
 }
 
 @misc{hubingerSleeperAgentsTraining2024,
