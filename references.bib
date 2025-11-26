@@ -66,6 +66,23 @@
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/ACQD6HIU/Bai et al. - 2022 - Constitutional AI Harmlessness from AI Feedback.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/X2GY35PC/2212.html}
 }
 
+@misc{baiQwenTechnicalReport2023,
+  title = {Qwen {{Technical Report}}},
+  author = {Bai, Jinze and Bai, Shuai and Chu, Yunfei and Cui, Zeyu and Dang, Kai and Deng, Xiaodong and Fan, Yang and Ge, Wenbin and Han, Yu and Huang, Fei and Hui, Binyuan and Ji, Luo and Li, Mei and Lin, Junyang and Lin, Runji and Liu, Dayiheng and Liu, Gao and Lu, Chengqiang and Lu, Keming and Ma, Jianxin and Men, Rui and Ren, Xingzhang and Ren, Xuancheng and Tan, Chuanqi and Tan, Sinan and Tu, Jianhong and Wang, Peng and Wang, Shijie and Wang, Wei and Wu, Shengguang and Xu, Benfeng and Xu, Jin and Yang, An and Yang, Hao and Yang, Jian and Yang, Shusheng and Yao, Yang and Yu, Bowen and Yuan, Hongyi and Yuan, Zheng and Zhang, Jianwei and Zhang, Xingxuan and Zhang, Yichang and Zhang, Zhenru and Zhou, Chang and Zhou, Jingren and Zhou, Xiaohuan and Zhu, Tianhang},
+  year = 2023,
+  month = sep,
+  number = {arXiv:2309.16609},
+  eprint = {2309.16609},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2309.16609},
+  urldate = {2025-11-26},
+  abstract = {Large language models (LLMs) have revolutionized the field of artificial intelligence, enabling natural language processing tasks that were previously thought to be exclusive to humans. In this work, we introduce Qwen, the first installment of our large language model series. Qwen is a comprehensive language model series that encompasses distinct models with varying parameter counts. It includes Qwen, the base pretrained language models, and Qwen-Chat, the chat models finetuned with human alignment techniques. The base language models consistently demonstrate superior performance across a multitude of downstream tasks, and the chat models, particularly those trained using Reinforcement Learning from Human Feedback (RLHF), are highly competitive. The chat models possess advanced tool-use and planning capabilities for creating agent applications, showcasing impressive performance even when compared to bigger models on complex tasks like utilizing a code interpreter. Furthermore, we have developed coding-specialized models, Code-Qwen and Code-Qwen-Chat, as well as mathematics-focused models, Math-Qwen-Chat, which are built upon base language models. These models demonstrate significantly improved performance in comparison with open-source models, and slightly fall behind the proprietary models.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/UCUETTDH/Bai et al. - 2023 - Qwen Technical Report.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/EP3RJ4UF/2309.html}
+}
+
 @misc{baiTrainingHelpfulHarmless2022,
   title = {Training a {{Helpful}} and {{Harmless Assistant}} with {{Reinforcement Learning}} from {{Human Feedback}}},
   author = {Bai, Yuntao and Jones, Andy and Ndousse, Kamal and Askell, Amanda and Chen, Anna and DasSarma, Nova and Drain, Dawn and Fort, Stanislav and Ganguli, Deep and Henighan, Tom and Joseph, Nicholas and Kadavath, Saurav and Kernion, Jackson and Conerly, Tom and {El-Showk}, Sheer and Elhage, Nelson and {Hatfield-Dodds}, Zac and Hernandez, Danny and Hume, Tristan and Johnston, Scott and Kravec, Shauna and Lovitt, Liane and Nanda, Neel and Olsson, Catherine and Amodei, Dario and Brown, Tom and Clark, Jack and McCandlish, Sam and Olah, Chris and Mann, Ben and Kaplan, Jared},
@@ -103,11 +120,28 @@
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/LHQWU65R/Brown et al. - 2022 - Echo Chambers, Rabbit Holes, and Algorithmic Bias How YouTube Recommends Content to Real Users.pdf}
 }
 
-@misc{christianoDeepReinforcementLearning2023,
+@misc{brownLanguageModelsAre2020,
+  title = {Language {{Models}} Are {{Few-Shot Learners}}},
+  author = {Brown, Tom B. and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and Agarwal, Sandhini and {Herbert-Voss}, Ariel and Krueger, Gretchen and Henighan, Tom and Child, Rewon and Ramesh, Aditya and Ziegler, Daniel M. and Wu, Jeffrey and Winter, Clemens and Hesse, Christopher and Chen, Mark and Sigler, Eric and Litwin, Mateusz and Gray, Scott and Chess, Benjamin and Clark, Jack and Berner, Christopher and McCandlish, Sam and Radford, Alec and Sutskever, Ilya and Amodei, Dario},
+  year = 2020,
+  month = jul,
+  number = {arXiv:2005.14165},
+  eprint = {2005.14165},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2005.14165},
+  urldate = {2025-11-26},
+  abstract = {Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something which current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. At the same time, we also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora. Finally, we find that GPT-3 can generate samples of news articles which human evaluators have difficulty distinguishing from articles written by humans. We discuss broader societal impacts of this finding and of GPT-3 in general.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/P29I9EQI/Brown et al. - 2020 - Language Models are Few-Shot Learners.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/GWE2H7I9/2005.html}
+}
+
+@misc{christianoDeepReinforcementLearning2017,
   title = {Deep Reinforcement Learning from Human Preferences},
   author = {Christiano, Paul and Leike, Jan and Brown, Tom B. and Martic, Miljan and Legg, Shane and Amodei, Dario},
-  year = 2023,
-  month = feb,
+  year = 2017,
+  month = jun,
   number = {arXiv:1706.03741},
   eprint = {1706.03741},
   primaryclass = {stat},
@@ -318,6 +352,50 @@
   archiveprefix = {arXiv},
   keywords = {Computer Science - Artificial Intelligence},
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/P9Q5Q9YV/Schoen et al. - 2025 - Stress Testing Deliberative Alignment for Anti-Scheming Training.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/XBVD76B2/2509.html}
+}
+
+@misc{schulmanProximalPolicyOptimization2017,
+  title = {Proximal {{Policy Optimization Algorithms}}},
+  author = {Schulman, John and Wolski, Filip and Dhariwal, Prafulla and Radford, Alec and Klimov, Oleg},
+  year = 2017,
+  month = aug,
+  number = {arXiv:1707.06347},
+  eprint = {1707.06347},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.1707.06347},
+  urldate = {2025-03-11},
+  abstract = {We propose a new family of policy gradient methods for reinforcement learning, which alternate between sampling data through interaction with the environment, and optimizing a "surrogate" objective function using stochastic gradient ascent. Whereas standard policy gradient methods perform one gradient update per data sample, we propose a novel objective function that enables multiple epochs of minibatch updates. The new methods, which we call proximal policy optimization (PPO), have some of the benefits of trust region policy optimization (TRPO), but they are much simpler to implement, more general, and have better sample complexity (empirically). Our experiments test PPO on a collection of benchmark tasks, including simulated robotic locomotion and Atari game playing, and we show that PPO outperforms other online policy gradient methods, and overall strikes a favorable balance between sample complexity, simplicity, and wall-time.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Machine Learning},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/SKFAPYF3/Schulman et al. - 2017 - Proximal Policy Optimization Algorithms.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/X5VYUDJG/1707.html}
+}
+
+@misc{shaoDeepSeekMathPushingLimits2024,
+  title = {{{DeepSeekMath}}: {{Pushing}} the {{Limits}} of {{Mathematical Reasoning}} in {{Open Language Models}}},
+  shorttitle = {{{DeepSeekMath}}},
+  author = {Shao, Zhihong and Wang, Peiyi and Zhu, Qihao and Xu, Runxin and Song, Junxiao and Bi, Xiao and Zhang, Haowei and Zhang, Mingchuan and Li, Y. K. and Wu, Y. and Guo, Daya},
+  year = 2024,
+  month = apr,
+  number = {arXiv:2402.03300},
+  eprint = {2402.03300},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2402.03300},
+  urldate = {2025-11-26},
+  abstract = {Mathematical reasoning poses a significant challenge for language models due to its complex and structured nature. In this paper, we introduce DeepSeekMath 7B, which continues pre-training DeepSeek-Coder-Base-v1.5 7B with 120B math-related tokens sourced from Common Crawl, together with natural language and code data. DeepSeekMath 7B has achieved an impressive score of 51.7\% on the competition-level MATH benchmark without relying on external toolkits and voting techniques, approaching the performance level of Gemini-Ultra and GPT-4. Self-consistency over 64 samples from DeepSeekMath 7B achieves 60.9\% on MATH. The mathematical reasoning capability of DeepSeekMath is attributed to two key factors: First, we harness the significant potential of publicly available web data through a meticulously engineered data selection pipeline. Second, we introduce Group Relative Policy Optimization (GRPO), a variant of Proximal Policy Optimization (PPO), that enhances mathematical reasoning abilities while concurrently optimizing the memory usage of PPO.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/R77PDRQV/Shao et al. - 2024 - DeepSeekMath Pushing the Limits of Mathematical Reasoning in Open Language Models.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/PWMTIC9Q/2402.html}
+}
+
+@article{team2023gemini,
+  title = {Gemini: A Family of Highly Capable Multimodal Models},
+  author = {Team, Gemini and Anil, Rohan and Borgeaud, Sebastian and Alayrac, Jean-Baptiste and Yu, Jiahui and Soricut, Radu and Schalkwyk, Johan and Dai, Andrew M and Hauth, Anja and Millican, Katie and others},
+  year = 2023,
+  journal = {arXiv preprint arXiv:2312.11805},
+  eprint = {2312.11805},
+  archiveprefix = {arXiv}
 }
 
 @misc{zieglerFineTuningLanguageModels2020,
