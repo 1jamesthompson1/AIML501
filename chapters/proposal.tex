@@ -1,47 +1,77 @@
+\textit{Rather than write the proposal at the end I will write it down now to get my current ideas and can update it as I go along. I worry this could "lock in" my ideas too early, yet the benefits of the process of writing seems to outweigh that. Furthermore I will expand to make it more complete and detailed as I go along and figure out what the technical approach will be.}
 
-\section*{3. Proposed Solution}
+\section{What I will do}
 
-In this section you will explain how solve the problem, that is, how
-you intend to carry the project out. At this early stage you need to
-be both clear about what you are going to do and flexible enough to
-adapt to changing circumstances. Making an early plan will not prevent
-you from running into trouble, but it will help you identify possible
-problems early. For example, if you intended to run an experiment in
-HCI, you might realise early on that there would be problems gathering
-sufficient data to get reliable results, and that you should re-design
-your experiment.
+The goal of this project is to develop, implement and evaluate for future feasibility a method for aligning large language models to a set of representatively collected human values. This will be a complete end to end process from data collection to final models output.
 
-Part of the planning process involves producing a timetable for when
-the work is actually going to be done.
+\section{What problem I will solve}
 
-Each part of the project should produce some output. For example you
-might plan on spending two weeks on background reading: the output of
-this will be a bibliography, and a possibly a literature survey for
-your report. Indeed, if you take the advice given above about having
-specific, measurable goals, you should describe this part of your
-project as:
+Current methods for training large language models involve scraping the internet for large amount of text data. This creates a very powerful next token prediction model. Then to turn this models into something useful for the end user (e.g. chatbots, assistants, robo doctor etc) the model is aligned to how we want to it to behave. Current methods for alignment involve contracting human labelers/annotators/demonstrators to provide data to give to the model on how we want it to behave. Problematically this is a opaque process that gives the end user little insight into what the model is "designed to do". Instead by collecting a representative set of human values from the public we can align models to be inline with the end users themselves \footnote{In the sense that the public are the end users of these models.}.
+
+\section{Timeline}
+
+The project will be carried out over three main phases. The first phase will be development of a data collection method to gather a representative set of human values. The second phase will be the implementation of an alignment method that uses the collected data to align a large language model. The third phase will be the evaluation of the aligned model against the human values dataset to determine the effectiveness of the alignment.
+
+\begin{figure}[h!]
+\centering
+\begin{ganttchart}[
+  vgrid, hgrid,
+  x unit=0.5cm
+]{1}{21}
+
+  % --- Month labels ---
+  \gantttitle{Jan}{2}
+  \gantttitle{Feb}{4}
+  \gantttitle{Mar}{4}
+  \gantttitle{Apr}{4}
+  \gantttitle{May}{4}
+  \gantttitle{Jun}{3} \\
+
+  % --- Week numbers ---
+  \gantttitlelist{1,...,21}{1} \\
+
+  % --- Work packages ---
+  \ganttgroup{Collecting alignment data}{1}{10} \\
+  \ganttbar{Designing data collection method}{1}{3} \\
+  \ganttbar{Implementing data collection method}{4}{6} \\
+  \ganttbar{Collecting data}{7}{10} \\
+
+  \ganttgroup{Aligning model}{7}{15} \\
+  \ganttbar{Selecting base model}{7}{8} \\
+  \ganttbar{Pilot train on University HPC}{9}{10} \\
+  \ganttbar{Full training on all data}{13}{15} \\
+  
+  \ganttgroup{Evaluating alignment}{10}{19}\\
+  \ganttbar{Create evaluation method}{10}{12} \\
+  \ganttbar{Update evaluation method}{15}{16} \\
+  \ganttbar{Run evaluation}{17}{19} \\
+
+  \ganttgroup{Writing report}{1}{21} \\
+  \ganttbar{Writeup datacollection method}{7}{7} \\
+  \ganttbar{Complete writeup}{19}{21} 
+\end{ganttchart}
+
+\caption{Project timeline in weeks (only roughly aligned to months). This assumes a start time of end of January 2026 with near full time work ramping up to full time work by end of February.}
+\end{figure}
+
+\section{Output}
+
+The output is both qualitative and quantitative in nature. There are four main deliverables:
 
 \begin{itemize}
-\item[\bf Good] Produce bibliography (est: 2 weeks)
+    \item A dataset of representatively collected human values for alignment of large language models.
+    \item A reproducible method for collecting a representative set of human values.
+    \item A aligned set of LLMs using the collected human values.
+    \item A report that outlines the all previous outputs including evaluation of the aligned models.
 \end{itemize}
-rather than
-\begin{itemize}
-\item[\bf Bad] Background reading (est: 2 weeks)
-\end{itemize}
 
-Note that the methodology you outline here is dependent upon the type
-of project and engineering area. You must talk to your supervisor
-about this.
+\section{Resources needed}
 
-\section*{4. Evaluating your Solution}
+There are two resource requirements for this project, hardware and survey responses. 
 
-In this section you will explain how you will evaluate your solution
-once you have built it. The method of evaluation will be domain
-specific. Your supervisor should provide guidance as to what is an
-appropriate form of evaluation. For example, user testing for a HCI
-project or performance measurement for a Network Engineering project.
+\subsection{Hardware}
+The first is hardware which will be needed to do the alignment finetuning and training of the model. This will be done on the Engineering and Computer Science department's GPU servers should give me access to a machine with up to 4 A40 GPUs. This will be sufficient to train models up to the size of about 30 billion parameters which is sufficient for \textit{near} SOTA performance on many tasks. Alternatively I may rent GPU time on cloud providers such as Lambda AI which could cost in the realm of several hundred NZD depending on the total training time needed.
 
-\section*{5. Resource Requirements}
+\subsubsection{Survey Responses}
 
-In this section you will detail any resource requirements such as
-hardware, software or access to subjects.
+\textit{No idea here. Need to research how many response would be needed. I imagine that I would want several thousands responses to get a sufficiently large data signal. Therefore atleast a few hundred respondents to get meaningful "representation" and subgroups.}
