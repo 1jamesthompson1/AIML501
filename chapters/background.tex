@@ -17,24 +17,27 @@ Explain what self attention is (highlevel), how the basic architecture looks (la
 
 \subsection{What is alignment?}
 
-\textit{Introduction to the concept of alignment in large language models, why it is important, and common methods to achieve it. Should reduce the duplicate descriptions of various alignment methods below.}
+As discussed above large language models (LLMs) have shown remarkable capabilities in understanding and generating human-like text. However the pre-training process focuses primarily on predicting the next token in a sequence, this does not necessarily mean that the model will produce useful, safe outputs that align with what users want. Therefore, aligning LLMs is generally \footnote{Other methods are proposed which embed the alignment within the pre-training step itself. Commonly used methods include filtering the training token} the process of taking the pre-trained model and fine-tuning it to better match what the designers and end users expect from the model. The aligning process can work on many dimensions of the models behavior from helpfulness, politeness, honesty, and safety to more complex values such as fairness, inclusively, and ethical considerations. More powerful models have a greater potential to cause harm if not properly aligned, making alignment along the dimensions such as safety and ethical considerations increasingly important. In this section I will outline some of the most common methods for post-training alignment of large language models along with current limitations and other methods.
 
+\subsection{Alignment through preference optimization}
+A common element in most post-training alignment methods is the use of preference optimization. The idea is to use a dataset of prompts and potential responses that are ranked either by humans or AI models to indicate which responses are preferred over others. This preference data is then used to fine-tune the pre-trained language model to increase the likelihood of generating preferred responses and decrease the likelihood of generating dis-preferred responses. With the goal that the final model will learn to generalize the preferences to new prompts and situations.
+
+The distribution of prompts in the preference dataset is crucial as it defines the context for which the model is expected to generalize its learned preferences. Therefore it important to ensure that the prompts used to create the preference dataset are sufficiently representative of the contexts and dimensions in which you are expecting the model to align its behavior. Furthermore the rankings of the responses is also important as they define what the model is aligning towards. In many cases these rankings are subjective and provided by a small group of human labelers (n~50).
+TODO: Expand this to explain the idea of generalization of preferences more rigorously.
 
 \textbf{Note:}
 \textit{Some of these subsection below of specific alignment methods could be compressed into single subsections and only explain the ones that are most relevant to my final proposed method. For now I include the three papers that I have actually read, I expect to compress RLHF and DPO into a "Other alignment methods" subsection. If I use more modern methods such as CAI with KTO or ORPO then I can expand on those more.}
 
 \subsection{Reinforcement Learning from Human Feedback}
-Having a model that is able to predict the next token is powerful however it doesn't guarantee that the model will behave in a manner that is aligned with the user preferences. Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} is a method that aims to align large language models to human preferences by using human feedback in the form of response rankings to guide the training process. This method was popularized by its use in training InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
+Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} uses human labellers to create the preference dataset and then a reinforcement learning algorithm to optimize the model based on this feedback. This method popularized post-training alignment and was used to train InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
 
 \subsubsection{How does RLHF work?}
 
 RLHF is separated into three distinct stages. Firstly is supervised fine-tuning (SFT) where a pre-trained language model is fine-tuned on a dataset of prompts and human written 'expected' responses to those prompts. The second step is collecting multiple responses from the SFT model to create a set of prompts and response then having human labelers rank these responses from best to worst. This ranked data is then used to train a preference model (PM) that can predict which of two responses is better aligned to human preferences. Finally the PM is used as a reward signal in the PPO \cite{schulmanProximalPolicyOptimization2017} RL algorithm to further fine-tune the SFT model and create the final RLHF model.
 
-The dataset of prompts are taken from the data distributions that you want to align towards. In the case of \cite{ouyangTrainingLanguageModels2022} the prompts were taken from playground use of an early version of InstructGPT. These prompts are intended to be representative of the types of queries and instructions that users would give to the model in practice. The human labelers that provide the human feedback part is a small set (~40) of contractors that are hired to both provide desired responses to the prompts as well as rank the responses generated by the SFT model.
-
 \subsubsection{Relevance}
 
-The idea of using human feedback to help train machine learning models is powerful, although it is not new and was around in theory and concept for years beforehand \cite{christianoDeepReinforcementLearning2017}. The specific method of RLHF was widely adopted \cite{team2023gemini,baiQwenTechnicalReport2023,shaoDeepSeekMathPushingLimits2024} yet is now replaced with more effective methods to utilize human feedback such as Direct Preference Optimization (DPO) \cite{rafailovDirectPreferenceOptimization2024}. It does however form the basis for an alignment method that allows us to train models that directly align to human preferences rather than just next token prediction. It is one of the first key methods that started the post-training focus for large language models.
+The idea of using human feedback to help train machine learning models is powerful, although it is not new and was around in theory and concept for years beforehand \cite{christianoDeepReinforcementLearning2017}. The specific method of RLHF was widely adopted \cite{team2023gemini,baiQwenTechnicalReport2023,shaoDeepSeekMathPushingLimits2024} yet is now replaced with more effective methods to utilize human feedback such as Direct Preference Optimization (DPO) \cite{rafailovDirectPreferenceOptimization2024}.
 
 \subsection{Direct Preference Optimization}
 
@@ -44,13 +47,70 @@ The idea presented in \cite{ouyangTrainingLanguageModels2022} introduces the con
 
 DPO starts with the same preferences data as RLHF; a set of prompts with responses ranked by humans. Like RLHF it starts with a pre-trained language model and is supervised fine-tuned on the prompts and highest ranked responses to create an SFT model. Instead of training a separate preference model, DPO uses the SFT model and the current model to create the DPO update gradient:
 \begin{equation*}
-    \nabla_\theta \mathcal{L}_{DPO}(\theta) = -\mathbb{E}_{(x, y^+, y^-) \sim D} \left[ \sigma (\hat{r}_\theta(x,y^-) - \hat{r}_\theta(x,y^+)) \left[\nabla_\theta \log \pi_\theta(y^+|x) - \nabla_\theta \log \pi_\theta(y^-|x) \right]\right]
+\begin{aligned}
+\nabla_\theta \mathcal{L}_{\mathrm{DPO}}(\theta)
+&= -\mathbb{E}_{(x, y^+, y^-) \sim D} \big[ \\
+&\quad
+\underbrace{
+\sigma \!\left(
+\hat{r}_\theta(x,y^-)
+-
+\hat{r}_\theta(x,y^+)
+\right)
+}_{\text{Reward model correctness}}
+\left(
+\underbrace{
+\nabla_\theta \log \pi_\theta(y^+|x)
+}_{\text{Increase preferred likelihood}}
+-
+\underbrace{
+\nabla_\theta \log \pi_\theta(y^-|x)
+}_{\text{Decrease dispreferred likelihood}}
+\right)\\
+&\big]
+\end{aligned}
 \end{equation*}
-Where $\hat{r}_\theta(x,y) = \log \pi_\theta(y|x) - \log \pi_{SFT}(y|x)$ is the reward function defined as the log difference between the current model and the SFT model, $\sigma$ is the sigmoid function, and $(x, y^+, y^-)$ are the prompt, preferred response, and dis-preferred response respectively. \cite{rafailovDirectPreferenceOptimization2024} found that the first weighting term is important and can be interpreted as increasing the weight of the update when the reward estimate is wrong. The second term is there to increase likelihood of generated preferred responses and decrease the likelihood of dis-preferred responses. This update can be calculated with only 4 forward passes through the network per preference pair (2 for reference model and two for current model), making it much more efficient than RLHF \footnote{RLHF will need to do many forward passes of the network to train the preference model, then it will still have to do 3 forward passes for each datapoint when it comes to the RL step.}.
+
+Where $\hat{r}_\theta(x,y) = \log \pi_\theta(y|x) - \log \pi_{SFT}(y|x)$ is the reward function defined as the log difference between the current model and the SFT model, $\sigma$ is the sigmoid function, and $(x, y^+, y^-)$ are the prompt, preferred response, and dis-preferred response respectively. \cite{rafailovDirectPreferenceOptimization2024} found that the reward model correctness weighting term for the update is very important. This update can be calculated with only 4 forward passes through the network per preference pair (2 for reference model and two for current model), making it much more efficient than RLHF \footnote{RLHF will need to do many forward passes of the network to train the preference model, then it will still have to do 3 forward passes for each datapoint when it comes to the RL step.}.
 
 \subsubsection{Relevance}
 
-Aligning large language models to human preferences is a crucial step in ensuring that these models are useful and safe for real-world applications. DPO provides a more efficient and straightforward process. It is the most commonly used public method for post training. However there are still more modern approaches that improve on alignment quality or efficiency such as \cite{ethayarajhKTOModelAlignment2024,hongORPOMonolithicPreference2024}. Due to its widespread adoption DPO represents a strong baseline for alignment.
+DPO provides a more effective way to utilize the same underlying feedback data that is used in RLHF. It replaced RLHF as the baseline method for post-training alignment. Due to its widespread adoption DPO represents a strong baseline for alignment.
+
+\subsection{Kahneman-Tversky Optimization}
+
+\cite{ethayarajhKTOModelAlignment2024} sets out to change the objective of a language model to maximize the utility of generations as opposed to maximizing the log-likelihood of preferences. This introduces the concept of Human-aware losses (HALOs) which previous methods like DPO are. \cite{ethayarajhKTOModelAlignment2024} propose a new objective function from the HALO family that works on only binary preference data. This means rather than needing a prompt and at-least two responses (preferred and disprefered), you only need a single response and it will either be desirable response or undesirable response.
+
+\subsubsection{How KTO works}
+
+KTO is built off the foundation of prospect theory \cite{tverskyAdvancesProspectTheory1992} where the human utility of an random situation is determined by a value function and a weighting function. The value function is what determines how good/bad an outcome is compared to a reference point, and the weighting function is used to weight particular outcomes in a biased way in line with how humans perceive probability. KTO translates this theory into an objective function that uses binary preference data and a modified value function. It only needs a database of prompts and responses labelled as either desirable or undesirable ($d=1$ for desirable, $d=-1$ for undesirable). The KTO loss function is defined as:
+
+\begin{equation*}
+\mathcal{L}_{\mathrm{KTO}}(\pi_\theta, \pi_{\text{ref}}) = \mathbb{E}_{(x, y, d) \sim D} \left[ \lambda(d) - v(x,y)\right]
+\end{equation*}
+\noindent where
+\begin{equation*}
+\begin{aligned}
+v(x,y) &=\begin{cases}
+\lambda_D \sigma(\beta(r_\theta(x,y)-z_0)), & \text{if } d = 1 \\
+\lambda_U \sigma(\beta(z_0 - r_\theta(x,y))), & \text{if } d = -1 \\
+\end{cases}
+\\
+\lambda(d) &=
+\begin{cases}
+\lambda_D, & \text{if } d = 1 \\
+\lambda_U, & \text{if } d = -1 \\
+\end{cases}
+\\
+r_\theta(x,y) &= \log \pi_\theta(y|x) - \log \pi_{\text{ref}}(y|x)\\
+z_0 &= D_\text{KL} \left( \pi_\theta(y|x) \| \pi_{\text{ref}}(y|x)\right)
+\end{aligned}
+\end{equation*}
+The three  hyperparameters $\beta$ is a temperature parameter, and $\lambda_D$, $\lambda_U$ are scaling parameters for desirable and undesirable responses respectively. In the references implementation and experiments $\lambda_D = \lambda_U = 1$ and the reference model is a SFT model.
+
+\subsubsection{Relevance}
+
+Collecting the ranked preference data which is needed by normal alignment methods is normally quite expensive \cite{casperOpenProblemsFundamental2023} where binary like dislike information is much more natural and less invasive to collect. KTO is shown to be more efficient and more robust to data imbalances than DPO. Furthermore a model of sufficient size (~13B) does not need a SFT step prior to KTO which greatly reduces computational requirements. Furthermore KTO shows similar performance without using a reference model \footnote{This is done by assuming that the reference model returns a uniform distribution across all outputs given $x$} which also halves the memory requirements when training. 
 
 \subsection{Constitutional AI}
 
@@ -139,7 +199,7 @@ The next step involves using the SL-CAI model to generate pairs of responses to 
 
 In the context of when this paper was released there was a key dilemma of helpfulness vs harmlessness in large language models. Therefore, this paper set out to make a model that is both helpful and harmless, without sacrificing one for the other. Further research has expanded the horizons to be concerned with more than just harmfulness vs helpfulness trade off. As hinted at by the authors in \cite{baiConstitutionalAIHarmlessness2022}, there is room for improvement in the CAI method to make it focus on more than just harmlessness vs helpfulness. This can be done by modifying the constitutions to include more diverse principles as well as modifying the red teaming prompts to target more diverse scenarios (i.e controversial topics, political leanings, etc). In this way we can see how elements of CAI can be built upon by generating these diverse constitutions and red teaming prompts in a representative manner to create models aligned to a representative set of values.
 
-\subsection{Current alignment concerns}
+\subsection{Current technical alignment limitations}
 
 \textit{Introduce some of the ongoing concerns around current alignment methods. Such as shallow alignment, inner misalignment, scalable oversight etc.}
 
