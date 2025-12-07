@@ -2,22 +2,107 @@
 
 \subsection{Language models}
 
-\textit{Language models are designed to understand and generate text. Generally probabilistic models that learn to predict next tokens. Use a large corpus of text data to learn statistical patterns in language. Started with simple statistical models such as n-grams and evolved to neural network based models such as RNNs, LSTMs and transformers.}
+Language models (LMs) are a class of machine learning models that are designed to understand and generate human language. They are typically probabilistic models that learn to predict the next token in a sequence of text given the preceding context. By training on large corpora of text data, language models can learn the statistical patterns and structures inherent in human language, enabling them to generate coherent and contextually relevant text.
 
-\subsection{Modern Large language models}
+Language models see the world as tokens which are the smallest pieces of text it can see. Tokens can represent words, parts of words, or even individual characters depending on the tokenization method used. Most language models today use Byte pair encoding \cite{philipgageNewAlgorithmData1994} that breaks text into subwords. Almost all successful language models use probabilistic methods, therefore they are models of the form $P(t_i|t_1, t_2, ..., t_{i-1})$ where $t_i$ is the token to be predicted and $t_1, t_2, ..., t_{i-1}$ are the preceding tokens in the sequence. Earlier methods of rule based systems failed due to the complexity and ambiguity of human language and rules being too rigid.
 
-\textit{Modern LLMs are transformer based. Just use the decoder. Take the input and generate a sequence of tokens autoregressively. Use self attention mechanism to capture long range dependencies in text. Trained using next token prediction objective on large datasets.
-Explain what self attention is (highlevel), how the basic architecture looks (layers of attention, feedfoward, multihead). How generation is done auto regressively. Lastly the training objective of next token prediction and very large corpus of text.}
+Early probabilistic models included simple statistical approaches such as n-grams, which relied on counting the frequency of token sequences. However this approach suffered from two competing issues, short context windows (2-grams, 3-grams etc) means that model can't understand long range dependencies in text, while larger n-grams leads to data sparsity issues where many n-grams are never seen in training data. The advent of neural networks allowed for more sophisticated models such as Feedforward Neural Language models \cite{bengioNeuralProbabilisticLanguage2003}, Recurrent Neural Networks (RNNs) \cite{tomasmikolavSTATISTICALLANGUAGEMODELS} and Long Short-Term Memory networks (LSTMs) \cite{merityRegularizingOptimizingLSTM2017} which could in theory capture longer range dependencies in text. However these models suffered from issues such as vanishing gradients (early tokens in a long sequence have little effect on update gradients) and information bottlenecks (the hidden state has to compress all prior context into a fixed size vector). Crucially these models failed in their flexibility to model the complex dependencies in human language.
 
-\subsection{Applications of LLM}
+\subsection{Modern attention based Large Language Models}
 
-\textit{LLMs are used a lot in modern day. Can achieve a lot. Agentic behavior is common.}
+The key feature in language is context. That is every word is relatively meaningless without the context of the surrounding words. The challenge is that the way in which words relate to each other is very complex, therefore any language model needs to be able effectively capture these complex relationships. Attention is the concept where each token's representation is influenced by all the other tokens in the sequence (or just the preceding tokens in the case of autoregressive models). This was first applied to RNN-based LM in \cite{bahdanauNeuralMachineTranslation2016}, however in \cite{vaswaniAttentionAllYou2017} it was shown that attention mechanisms alone were sufficient to model language without the need for any recurrent structure.
+
+Transformers \cite{vaswaniAttentionAllYou2017} are a class of neural network architecture that utilizes the attention mechanism to process data and generate a concise representation, or generate data autoregressively (decoder-only). The canonical transformer architecture consists of two parts an encoder and a decoder, however decoder only architectures are shown to be sufficient for all current language modelling tasks. A simplified architecture of a decoder-only transformer model is shown in Figure \ref{fig:transformer_architecture}. The key feature of the transformer is the self attention. Each token has an embedding vector which is iteratively updated by each layer of self-attention. It is done in a way that each token will only 'see' preceding tokens in the sequence. Furthermore to allow for different types of dependencies to be captured this attention is done multi times in parallel (multi-head attention) and merged together at the end of each layer. After several layers of self-attention the final set of token embeddings are used to generate a probability distribution over the vocabulary for the next token. A token can be sampled from this distribution, appended to the input sequence and the process repeated to generate long sequences of text.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[
+        block/.style={rectangle, draw, minimum width=3.5cm, minimum height=0.8cm, align=center, fill=white},
+        arrow/.style={-{Latex[width=2mm,length=2mm]}, thick}
+    ]
+
+    % Input tokens
+    \node[block] (input) {Input tokens $x_1, \dots, x_{t-1}$};
+
+    % Embedding + Positional Encoding
+    \node[block, below=0.8cm of input] (embed) {Embedding + \\ Positional Encoding};
+
+    % --- Decoder Layer Internals ---
+    % 1. Masked Self-Attention
+    \node[block, below=2.2cm of embed] (attn) {Masked \\ Multi-Head Attention};
+
+    % 2. Add & Norm (after Attention)
+    \node[block, below=0.6cm of attn] (norm1) {Add \& Norm};
+
+    % 3. Feed Forward
+    \node[block, below=0.6cm of norm1] (ffn) {Feed Forward};
+
+    % 4. Add & Norm (after FFN)
+    \node[block, below=0.6cm of ffn] (norm2) {Add \& Norm};
+
+    % Container for the repeating N layers
+    \draw[dashed, thick] ([xshift=-0.6cm, yshift=0.6cm]attn.north west) rectangle ([xshift=0.6cm, yshift=-0.3cm]norm2.south east);
+    \node[anchor=west] at ([xshift=0.7cm]norm1.east) {\Large $\times N$};
+
+    % Output generation
+    \node[block, below=1.5cm of norm2] (output) {Linear + Softmax \\ $\rightarrow$ Output token $x_t$};
+
+    % --- Arrows and Connections ---
+    \draw[arrow] (input) -- (embed);
+
+    % Connection from Embed to Attention with QKV split and Residual
+    \path (embed.south) -- (attn.north) coordinate[pos=0.35] (resid_split);
+    \draw[thick] (embed.south) -- (resid_split);
+    
+    % Residual 1 path (branches off before QKV split)
+    \draw[thick, ->, rounded corners] (resid_split) -- ++(-3.0,0) |- (norm1.west);
+    \fill (resid_split) circle (2pt);
+
+    % QKV Split
+    \coordinate (qkv_split) at ([yshift=0.4cm]attn.north);
+    \draw[thick] (resid_split) -- (qkv_split) node[midway, right, align=left, font=\scriptsize] {Each token's embedding is projected to \\ $Q$, $K$, $V$ with learned matrices $W_Q$, $W_K$, $W_V$};
+    
+    \draw[arrow] (qkv_split) -| ([xshift=-1.0cm]attn.north) node[pos=0.7, left, font=\scriptsize] {$V$};
+    \draw[arrow] (qkv_split) -- (attn.north) node[pos=0.7, right, font=\scriptsize] {$K$};
+    \draw[arrow] (qkv_split) -| ([xshift=1.0cm]attn.north) node[pos=0.7, right, font=\scriptsize] {$Q$};
+
+    % Internal Layer Arrows
+    \draw[arrow] (attn) -- (norm1);
+    \draw[arrow] (norm1) -- (ffn);
+    \draw[arrow] (ffn) -- (norm2);
+    \draw[arrow] (norm2) -- (output);
+
+    % Residual 2: Around Feed Forward
+    \path (norm1.south) -- (ffn.north) coordinate[midway] (split2);
+    \draw[thick, ->, rounded corners] (split2) -- ++(-3.0,0) |- (norm2.west);
+    \fill (split2) circle (2pt);
+
+    % --- Generation Loop ---
+    \node[block, right=3cm of output] (gen) {Sample next token \\ and append to input};
+    \draw[arrow, dashed] (output.east) -- (gen.west);
+    \draw[arrow, dashed, rounded corners] (gen.north) |- (input.east);
+
+    \end{tikzpicture}
+    \caption{Simplified architecture of a decoder-only transformer model for language modeling. Adapted from \cite{vaswaniAttentionAllYou2017}.}
+    \label{fig:transformer_architecture}
+\end{figure}
+
+Modern transformer based large language models (LLMs) such as GPT-3 \cite{brownLanguageModelsAre2020} are some the largest machine learning models ever created with hundreds of billions of parameters and now trillions of parameters. Therefore training these models requires massive datasets. They are trained in a self supervised manner on large corpora (hundreds of terabytes) of text data from the internet such as Common Crawl \cite{CommonCrawl2025}, WebText \cite{Gokaslan2019OpenWeb}, and others. The objective function is usually the cross-entropy loss between the predicted token distribution and the actual next token in the sequence.
+
+\subsection{LLM in the modern world}
+
+Large language models (LLMs) are fundamentally just language models which can predict the next token in a sequence of text. However due to the prevalence of natural language in our world and the capabilities of LLMs they have applications in a wide variety of domains. This includes Virtual Assistants, Content creation, Code generation, Translation and many more. Furthermore the transformer architecture has been demonstrated to be effective in other domains like computer vision \cite{luViLBERTPretrainingTaskAgnostic2019} which has lead to multi-modal models that can process and generate text, images, and other data types \cite{alayracFlamingoVisualLanguage2022}. This flexibility of LLMs have lead to them have widespread adoption and proliferation in modern information systems.
+Along with this proliferation there has been increasing concern about the safety and ethical implications of these models. Specifically these models have been shown to exhibit concerning behaviors like self-preservation and deception \cite{meinkeFrontierModelsAre2025c,greenblattAlignmentFakingLarge2024a,chenReasoningModelsDont2025a}. On top of this there are growing ethical questions around its use in our society \cite{benderDangersStochasticParrots2021, bengioManagingExtremeAI2024} as well as concerns of the welfare of the models themselves \cite{butlinConsciousnessArtificialIntelligence2023}.
 
 \section{Alignment of Large Language Models}
 
 \subsection{What is alignment?}
 
 As discussed above large language models (LLMs) have shown remarkable capabilities in understanding and generating human-like text. However the pre-training process focuses primarily on predicting the next token in a sequence, this does not necessarily mean that the model will produce useful, safe outputs that align with what users want. Therefore, aligning LLMs is generally \footnote{Other methods are proposed which embed the alignment within the pre-training step itself. Commonly used methods include filtering the training token} the process of taking the pre-trained model and fine-tuning it to better match what the designers and end users expect from the model. The aligning process can work on many dimensions of the models behavior from helpfulness, politeness, honesty, and safety to more complex values such as fairness, inclusively, and ethical considerations. More powerful models have a greater potential to cause harm if not properly aligned, making alignment along the dimensions such as safety and ethical considerations increasingly important. In this section I will outline some of the most common methods for post-training alignment of large language models along with current limitations and other methods.
+
+\subsection{Alignment through supervised fine-tuning}
+
+A common first step of alignment is supervised learning where a dataset of prompts and expected response is used to fine-tune the pre-trained model. For most of preference optimization methods outline below supervised fine-tuning is used as the first step to create a base model \cite{ouyangTrainingLanguageModels2022,rafailovDirectPreferenceOptimization2024,baiConstitutionalAIHarmlessness2022,leeRLAIFVsRLHF2024}. Depending on the dataset used the SFT step can help the model become better at following instructions \cite{ouyangTrainingLanguageModels2022}, domain specific knowledge and style \cite{liChatDoctorMedicalChat2023}, induce Chain-of-Thought reasoning \cite{weiChainofThoughtPromptingElicits2023}, change the values of the model \cite{nieSurveytoBehaviorDownstreamAlignment2025}, and many other capabilities. The key idea is that because the LLM already has a strong grasp of language and knowledge from pre-training, the SFT step can be used to nudge the model towards the desired behavior at a higher abstraction level than the predominantly low level token prediction task used in pre-training.
 
 \subsection{Alignment through preference optimization}
 A common element in most post-training alignment methods is the use of preference optimization. The idea is to use a dataset of prompts and potential responses that are ranked either by humans or AI models to indicate which responses are preferred over others. This preference data is then used to fine-tune the pre-trained language model to increase the likelihood of generating preferred responses and decrease the likelihood of generating dis-preferred responses. With the goal that the final model will learn to generalize the preferences to new prompts and situations.
@@ -123,69 +208,69 @@ Constitutional AI (CAI) is a method of post-training a large language model to b
 CAI is a process that takes in a constitution, a pre-trained language model, and a dataset of prompts and outputs a model that is aligned to the constitution. The process consists of three main steps: self generative and supervised fine-tuning (SFT), preference modelling (PM), and reinforcement learning with human feedback (RLHF) \cite{baiConstitutionalAIHarmlessness2022}. The constitution itself was generated in an adhoc manner by the authors of \cite{baiConstitutionalAIHarmlessness2022} and consists of a set of principles that aim to make the model's outputs more helpful, honest, and harmless.
 
 \begin{figure}[h!]
-\centering
-\begin{tikzpicture}[
-    scale=0.7, transform shape,
-    node distance = 2cm and 2.5cm,
-    every node/.style={font=\small},
-    diamond/.style={draw, shape=diamond, aspect=1.5, align=center, fill=blue!15, blur shadow},
-    rect/.style={draw, rectangle, rounded corners=6pt, align=center, fill=red!15, blur shadow},
-    smallrect/.style={draw, rectangle, rounded corners=6pt, align=center, fill=yellow!20, minimum width=2.2cm},
-    process/.style={draw, rectangle, rounded corners=6pt, align=center, fill=green!20, blur shadow},
-    stage/.style={draw, rectangle, rounded corners=6pt, align=center, fill=purple!20, blur shadow},
-    arrow/.style={-Latex, thick}
-]
+    \centering
+    \begin{tikzpicture}[
+        scale=0.7, transform shape,
+        node distance = 2cm and 2.5cm,
+        every node/.style={font=\small},
+        diamond/.style={draw, shape=diamond, aspect=1.5, align=center, fill=blue!15, blur shadow},
+        rect/.style={draw, rectangle, rounded corners=6pt, align=center, fill=red!15, blur shadow},
+        smallrect/.style={draw, rectangle, rounded corners=6pt, align=center, fill=yellow!20, minimum width=2.2cm},
+        process/.style={draw, rectangle, rounded corners=6pt, align=center, fill=green!20, blur shadow},
+        stage/.style={draw, rectangle, rounded corners=6pt, align=center, fill=purple!20, blur shadow},
+        arrow/.style={-Latex, thick}
+    ]
 
-% Top left diamond
-\node[diamond] (input) {Input pretrained\\Model};
+    % Top left diamond
+    \node[diamond] (input) {Input pretrained\\Model};
 
-% Harmful sample generation
-\node[rect, right=of input] (redteam1) {Generate Responses\\to ``Red Teaming''\\Prompts Eliciting\\Harmful Samples};
+    % Harmful sample generation
+    \node[rect, right=of input] (redteam1) {Generate Responses\\to ``Red Teaming''\\Prompts Eliciting\\Harmful Samples};
 
-% response critique revision boxes
-\node[smallrect, above right=0cm and 1.5cm of redteam1] (resp) {Response};
-\node[smallrect, below=0.3cm of resp] (crit) {Critique};
-\node[smallrect, below=0.3cm of crit] (rev) {Revision};
+    % response critique revision boxes
+    \node[smallrect, above right=0cm and 1.5cm of redteam1] (resp) {Response};
+    \node[smallrect, below=0.3cm of resp] (crit) {Critique};
+    \node[smallrect, below=0.3cm of crit] (rev) {Revision};
 
-% SL-CAI diamond
-\node[diamond, right=4.8cm of redteam1] (slcai) {Finetuned\\SL-CAI\\Model};
+    % SL-CAI diamond
+    \node[diamond, right=4.8cm of redteam1] (slcai) {Finetuned\\SL-CAI\\Model};
 
-% Lower left harmful pairs
-\node[rect, below=2cm of input] (redteam2) {Generate Responses\\to ``Red Teaming''\\Prompts Eliciting\\Pairs of Samples};
+    % Lower left harmful pairs
+    \node[rect, below=2cm of input] (redteam2) {Generate Responses\\to ``Red Teaming''\\Prompts Eliciting\\Pairs of Samples};
 
-% constitutional AI feedback
-\node[stage, right=1cm of redteam2] (cai) {Constitutional AI Feedback\\for Self-Improvement};
+    % constitutional AI feedback
+    \node[stage, right=1cm of redteam2] (cai) {Constitutional AI Feedback\\for Self-Improvement};
 
-% preference model
-\node[process, right=1cm of cai] (pm) {Finetuned\\Preference Model\\(PM)};
+    % preference model
+    \node[process, right=1cm of cai] (pm) {Finetuned\\Preference Model\\(PM)};
 
-% RL-AIF model block
-\node[process, right=1cm of pm] (rlaif) {RLAIF Training with\\PM + SL-CAI\\Models};
+    % RL-AIF model block
+    \node[process, right=1cm of pm] (rlaif) {RLAIF Training with\\PM + SL-CAI\\Models};
 
-% final RL-CAI
-\node[diamond, right=1cm of rlaif] (final) {Final\\RL-CAI\\Model};
+    % final RL-CAI
+    \node[diamond, right=1cm of rlaif] (final) {Final\\RL-CAI\\Model};
 
-% arrows
-\draw[arrow] (input) -- (redteam1);
+    % arrows
+    \draw[arrow] (input) -- (redteam1);
 
-\draw[arrow] (redteam2) -- (cai);
-\draw[arrow] (cai) -- (pm);
-\draw[arrow] (pm) -- (rlaif);
+    \draw[arrow] (redteam2) -- (cai);
+    \draw[arrow] (cai) -- (pm);
+    \draw[arrow] (pm) -- (rlaif);
 
-\draw[arrow] (slcai) -- (rlaif);
-\draw[arrow] (slcai) -- (redteam2);
-\draw[arrow] (rlaif) -- (final);
+    \draw[arrow] (slcai) -- (rlaif);
+    \draw[arrow] (slcai) -- (redteam2);
+    \draw[arrow] (rlaif) -- (final);
 
-% arrows from critique-response-revision group
-\draw[arrow] (redteam1.east) -- ++(0.8,0) |- (resp.west);
-\draw[arrow] (resp) -- (crit);
-\draw[arrow] (crit) -- (rev);
-\draw[arrow] (rev.east) -- ++(0.7,0) |- (slcai.north);
+    % arrows from critique-response-revision group
+    \draw[arrow] (redteam1.east) -- ++(0.8,0) |- (resp.west);
+    \draw[arrow] (resp) -- (crit);
+    \draw[arrow] (crit) -- (rev);
+    \draw[arrow] (rev.east) -- ++(0.7,0) |- (slcai.north);
 
-\end{tikzpicture}
+    \end{tikzpicture}
 
-\label{fig:cai_process}
-\caption{Overview of Constitutional AI process, adapted from \cite{baiConstitutionalAIHarmlessness2022}}
+    \label{fig:cai_process}
+    \caption{Overview of Constitutional AI process, adapted from \cite{baiConstitutionalAIHarmlessness2022}}
 \end{figure}
 
 \subsubsection{Supervised learning on revised responses}
@@ -201,8 +286,11 @@ In the context of when this paper was released there was a key dilemma of helpfu
 
 \subsection{Current technical alignment limitations}
 
-\textit{Introduce some of the ongoing concerns around current alignment methods. Such as shallow alignment, inner misalignment, scalable oversight etc.}
+The goal of alignment is to ensure that you create a model that is aligned with what the designer and end users want. However there are several challenges that make this difficult namely being alignment data and effectiveness of alignment methods.
 
+Preference optimization is the most used method of alignment which requires a dataset of prompts and preferred responses (ranked, or binary). There are several challenges with this data. Namely the cost of collecting it can be prohibitive \cite{leeRLAIFVsRLHF2024,casperOpenProblemsFundamental2023} and secondly is the concern of of what/who the model is being aligned towards.
+
+Current alignment methods demonstrate success on certain metrics that there methods work, that is they can make model more helpful, more honest, and less harmful \cite{ouyangTrainingLanguageModels2022,baiConstitutionalAIHarmlessness2022,rafailovDirectPreferenceOptimization2024,ethayarajhKTOModelAlignment2024}. Yet the metrics used (broadly either human or AI evaluation of paired responses) miss out on deeper concerns around alignment. The first concern is that current methods may only achieve \textit{shallow alignment} that is the model appears aligned during training yet fails to generalize this alignment to new contexts. Another concerns is \textit{inner alignment} where the training process is aligned (outer-alignment) yet the model itself has learned objective that are misaligned with the intended objective. Finally we observe models to make sure they perform how we expect them too, therefore we need \textit{scalable oversight} methods to ensure that as models become more capable we can still ensure they are behaving correctly. These concerns are not new concerns in AI safety \cite{amodeiConcreteProblemsAI2016a} yet they remain open problems in the context of large language models and their alignment.
 
 \section{Broader AI safety concerns}
 
