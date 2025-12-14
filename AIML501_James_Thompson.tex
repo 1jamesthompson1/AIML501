@@ -16,6 +16,9 @@
 
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{microtype}
+
+\usepackage{todonotes}  % for adding todo notes REMOVE BEFORE FINAL
 
 %  We don't want figures to float so we define
 %
@@ -94,11 +97,14 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\listoftodos
+
 \chapter{Introduction}
 
 \input{chapters/introduction.tex}
 
 \chapter{Background}
+\todo{Rethink the structure of the background chapter. Possibly reorder it}
 
 \input{chapters/background.tex}
 

@@ -87,7 +87,7 @@ Transformers \cite{vaswaniAttentionAllYou2017} are a class of neural network arc
     \label{fig:transformer_architecture}
 \end{figure}
 
-Modern transformer based large language models (LLMs) such as GPT-3 \cite{brownLanguageModelsAre2020} are some the largest machine learning models ever created with hundreds of billions of parameters and now trillions of parameters. Therefore training these models requires massive datasets. They are trained in a self supervised manner on large corpora (hundreds of terabytes) of text data from the internet such as Common Crawl \cite{CommonCrawl2025}, WebText \cite{Gokaslan2019OpenWeb}, and others. The objective function is usually the cross-entropy loss between the predicted token distribution and the actual next token in the sequence.
+Modern transformer based large language models (LLMs) such as GPT-3 \cite{brownLanguageModelsAre2020} are some of the largest machine learning models ever created with hundreds of billions of parameters and now trillions of parameters. Therefore training these models requires massive datasets. They are trained in a self supervised manner on large corpora (hundreds of terabytes) of text data from the internet such as Common Crawl \cite{CommonCrawl2025}, WebText \cite{Gokaslan2019OpenWeb}, and others. The objective function is usually the cross-entropy loss between the predicted token distribution and the actual next token in the sequence.
 
 \subsection{LLM in the modern world}
 
@@ -98,7 +98,7 @@ Along with this proliferation there has been increasing concern about the safety
 
 \subsection{What is alignment?}
 
-As discussed above large language models (LLMs) have shown remarkable capabilities in understanding and generating human-like text. However the pre-training process focuses primarily on predicting the next token in a sequence, this does not necessarily mean that the model will produce useful, safe outputs that align with what users want. Therefore, aligning LLMs is generally \footnote{Other methods are proposed which embed the alignment within the pre-training step itself. Commonly used methods include filtering the training token} the process of taking the pre-trained model and fine-tuning it to better match what the designers and end users expect from the model. The aligning process can work on many dimensions of the models behavior from helpfulness, politeness, honesty, and safety to more complex values such as fairness, inclusively, and ethical considerations. More powerful models have a greater potential to cause harm if not properly aligned, making alignment along the dimensions such as safety and ethical considerations increasingly important. In this section I will outline some of the most common methods for post-training alignment of large language models along with current limitations and other methods.
+As discussed above large language models (LLMs) have shown remarkable capabilities in understanding and generating human-like text. However the pre-training process focuses primarily on predicting the next token in a sequence, this does not necessarily mean that the model will produce useful, safe outputs that align with what users want. Therefore, aligning LLMs is generally \footnote{Other methods are proposed which embed the alignment within the pre-training step itself. Commonly used methods include filtering/curating training data.} the process of taking the pre-trained model and fine-tuning it to better match what the designers and end users expect from the model. The aligning process can work on many dimensions of the models behavior from helpfulness, politeness, honesty, and safety to more complex values such as fairness, inclusively, and ethical considerations. More powerful models have a greater potential to cause harm if not properly aligned, making alignment along the dimensions such as safety and ethical considerations increasingly important. In this section I will outline some of the most common methods for post-training alignment of large language models along with current limitations and other methods.
 
 \subsection{Alignment through supervised fine-tuning}
 
@@ -107,11 +107,11 @@ A common first step of alignment is supervised learning where a dataset of promp
 \subsection{Alignment through preference optimization}
 A common element in most post-training alignment methods is the use of preference optimization. The idea is to use a dataset of prompts and potential responses that are ranked either by humans or AI models to indicate which responses are preferred over others. This preference data is then used to fine-tune the pre-trained language model to increase the likelihood of generating preferred responses and decrease the likelihood of generating dis-preferred responses. With the goal that the final model will learn to generalize the preferences to new prompts and situations.
 
-The distribution of prompts in the preference dataset is crucial as it defines the context for which the model is expected to generalize its learned preferences. Therefore it important to ensure that the prompts used to create the preference dataset are sufficiently representative of the contexts and dimensions in which you are expecting the model to align its behavior. Furthermore the rankings of the responses is also important as they define what the model is aligning towards. In many cases these rankings are subjective and provided by a small group of human labelers (n~50).
-TODO: Expand this to explain the idea of generalization of preferences more rigorously.
 
-\textbf{Note:}
-\textit{Some of these subsection below of specific alignment methods could be compressed into single subsections and only explain the ones that are most relevant to my final proposed method. For now I include the three papers that I have actually read, I expect to compress RLHF and DPO into a "Other alignment methods" subsection. If I use more modern methods such as CAI with KTO or ORPO then I can expand on those more.}
+\todo{Expand this to explain the idea of generalization of preferences more rigorously.}
+The distribution of prompts in the preference dataset is crucial as it defines the context for which the model is expected to generalize its learned preferences. Therefore it important to ensure that the prompts used to create the preference dataset are sufficiently representative of the contexts and dimensions in which you are expecting the model to align its behavior. Furthermore the rankings of the responses is also important as they define what the model is aligning towards. In many cases these rankings are subjective and provided by a small group of human labelers (n~50).
+
+\todo[inline]{Some of these subsection below of specific alignment methods could be compressed into single subsections. My current plan might not use preference optimization at all and instead I should maybe focus more on pretraining and supervised fine tuning.}
 
 \subsection{Reinforcement Learning from Human Feedback}
 Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} uses human labellers to create the preference dataset and then a reinforcement learning algorithm to optimize the model based on this feedback. This method popularized post-training alignment and was used to train InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
@@ -294,16 +294,53 @@ Current alignment methods demonstrate success on certain metrics that there meth
 
 \section{Broader AI safety concerns}
 
-\textit{
+\todo[inline]{
     Take the problem of alignment and expand it broader AI alignment concerns.
     Talk about mis generalization, and specification gaming.
     Introduce the concepts from PublicAI, incentives and collective intelligence.
-    ...
 }
+
+\subsection{Purpose of AI}
+
+\todo[inline]{Talk about how the purpose of AI is to help humanity achieve its goals. Therefore we need to ensure that the AI is aligned to human values and goals. This is a key concern in AI safety as misaligned AI can lead to catastrophic outcomes.}
+
+\subsubsection{Who is it made for?}
+\todo[inline]{Look at incentives of for-profit AI development. Introduce the concept of public AI. How this better serves humanity as a whole rather than just the interests of a few. Talk about the value aggreagtion problem and how laignign to the public is good.}
+
+\subsubsection{Who is it aligned to?}
+\todo[inline]{Look into some philosophical concepts around how the collective the best baseline if we have no other gold standard. Provide some rationale as to why using the public as the source of values is a good idea, as opposed to some "gold standard" values provided by experts.
+This will lend in the wpulbic AI. As AI is for the public, for the greater good etc.
+}
+
+\subsection{Problems of AI}
+
+\todo[inline]{Talk about general overarhcing problems of AI safety. \cite{amodeiConcreteProblemsAI2016a} is a good starting point. Talka bout negative side effect, mis generalization, scalable oversight and robustness. This is also a good page to look from: https://www.princetonalignment.org/papers. Also other problemsl ike value lock in etc}
+
 
 \section{Representing Human Values}
 
-\textit{
-    Discuss concepts such as how does one understand the values of a group. How does it relate to building AI systems. I need to significant reading on this as I am most outside my comfort zone for this.
-    Look into some philosophical concepts around how the collective the best baseline if we have no other gold standard. Provide some rationale as to why using the public as the source of values is a good idea, as opposed to some "gold standard" values provided by experts.
-}
+As discussed in the previous sections it is paramount that we make sure that large language models (LLMs) are aligned to human values and by extension behavior. There remains a key questions of how do we represent and understand human values that would allow us to align a AI system to them. In this section I will outline some of the key concepts around representing human values and how they relate to AI systems.
+
+\subsection{Human values taxonomy}
+
+Human values are an old idea that go back millennia \cite{aristotleAristotlesNicomacheanEthics350B.C.E,mullerLawsManu1886,amesAnalectsConfuciusPhilosophical1998}, with each culture having its own set of values that are important to them. They define how people should be and act \footnote{Although the actual definition of values is up for contention, this simple version can suffice for our purposes}. In modern times we have developed various taxonomies of humans values tha allow us to understand and categorize different sets of values.
+
+A widely cited modern value taxonomy is Rokeach's book "The Nature of Human Values" \cite{rokeachNatureHumanValues1973} where he posits that humans values can be understood as 36 distinct values. Rokeach groups the values are either \textit{terminal values} which are desirable end-states (freedom, equality...) and \textit{instrumental values} which are preferable modes of behavior (honesty, kindness...). Expanding on this idea of value taxonomy Schwartz \cite{schwartzUniversalsContentStructure1992} proposes a model of 10 broad human values that he later expands to 19 values \cite{schwartzRefiningTheoryBasic2012}. Schwartz's organises the values in a circumplex structure where one dimensions is self-enhancement vs self-transcendence and the other is openness to change vs conservation.
+
+These taxonomies provide a useful framework for understanding human values and how they relate to each other. Importantly they are trying to provide the most predictive power with the least number of values. This trade off between complexity and predictive power is important when trying to represent human values in AI systems. Contemporary work from computer scientists have created value taxonomies that are designed specifically for predictive power \cite{kieselIdentifyingHumanValues2022}. Yet we can see that it is more complex (54values) and not as interpretable as the psychological taxonomies. This means that it works well for AI systems yet is hard to apply to humans. This means that for the purpose of AI alignment we need a taxonomy that is both interpretable and has good predictive power that would allow us to align AI systems to human values effectively.
+
+\subsection{Value surveys}
+
+One of the key features of early modern value taxonomies is that they were created with associated survey instruments that allowed researchers to measure the values of individuals. Rokeach \cite{rokeachNatureHumanValues1973} created the Rokeach Value Survey (RVS) which asked participants to rank the 36 values in order of importance to them. Schwartz \cite{schwartzUniversalsContentStructure1992} created the Schwartz Value Survey (SVS) which asked participants to rate the importance of each value on a 9-point scale. These surveys allowed researchers to measure the values of individuals and groups and provided a way to understand how values relate to behavior. More recently there have been broader efforts to create values surveys that capture the values of large groups of people. The world values \cite{WVS2020} and the New Zealand Attitudes and Values Study (NZAVS) \cite{NZAVS2025} are two examples of large scale surveys that map the values of entire populations (global and country respectively).
+
+Interestingly these surveys help us understand how values vary yet don't conform to a strict compact taxonomy. Each of the survey has around 300 questions that try to capture the complexity of human values. This means that they provide a rich and granular understanding of the respondents values. They are hard to map to underlying 'foundational values' such as those proposed by Rokeach and Schwartz. Yet due to their breadth of questions provide useful data to help train \cite{nieSurveytoBehaviorDownstreamAlignment2025,liCultureLLMIncorporatingCultural2024} and evaluate \cite{durmusMeasuringRepresentationSubjective2024,zhaoWorldValuesBenchLargeScaleBenchmark2024,aroraProbingPreTrainedLanguage2025}Large Language Models (LLMs) on human values.
+
+These surveys provide granular data yet struggle from well documented issues of self-reporting bias \cite{podsakoffCommonMethodBiases2003} and social desirability bias \cite{crowneNewScaleSocial1960}. This means that the values reported by respondents may not accurately reflect their true values. From an economics perspective this is the distinction between stated values and revealed values. Stated values are those that people report in surveys, while revealed values are those that can be inferred from their behavior. This provides a caveat and limitation to using value surveys as a way to represent human values for AI alignment.
+
+\subsection{Values to behavior}
+For the purposes of building AI systems understanding values is only useful as far as they can predict behavior. That is we want the AI system to behave the same or better in all situations that a human would. There is contention in psychology and AI alignment research around the values to behavior gap \cite{kollmussMindGapWhy2002,gabrielArtificialIntelligenceValues2020}. When one tries to bridge the gap between understanding someones behavior and values we run into common problems namely; non-identifiability of values \footnote{Many different values can lead to the same behavior}, specification gaming (as mentioned above) and extrapolation errors. Non-identifiability and extrapolation errors are demonstrated clearly in inverse reinforcement learning (IRL) \cite{abbeelApprenticeshipLearningInverse2004}. This is the reasons as to why many AI alignment researchers focus on direct behavior alignment through revealed values with pairwise preference ranking methods as discussed above like DPO, RLHF and KTO.
+
+However the idea that values can lead to and predict behavior has been argued \cite{russellh.fazioDirectExperienceAttitudeBehavior1981,schwartzOverviewSchwartzTheory2012}. Furthermore in the reinforcement learning literature there is evidence one can use values (known as reward functions in the RL literature) to predict and understand behavior. The methods that are most effective for achieving this is through combining multiple signals (stated values, observed behavior and explicit feedback) \cite{adamowiczCombiningRevealedStated1994}. In machine learning this is done through collaborative learning where different types of value signals at different times are used to train/fine-tune a model \cite{hadfield-menellCooperativeInverseReinforcement2024,ouyangTrainingLanguageModels2022}. Using multiple signal also help mitigate the gap between true values and stated values. Ideally one would just align a model to a persons values then behavior would follow. However due to the gap between values and behavior one needs to provide additional feedback to the model which for LLM is done through preference optimization methods outlined above.
+
+\subsection{Why human values are important for AI alignment}
+The is-ought problem is an old philosophical concept that states that one cannot decide what ought to be purely from what currently is \cite{Hume1739Treatise}. This presents a challenge for AI alignment, as we must determine how to align AI systems with human values, which are inherently normative and uncertain. Our models will have some values and some behavior patterns whether we intend them to or not. Whether certain sets of human values are correct or not is a philosophical question that is outside the scope of this work. Yet the distribution of human values is the best target we have to align AI systems to. This is because human values (specifically democratic and representative values) are the closest to a consensus, and therefore under democratic ideals represent the best target for alignment. Alternative methods like inaction---letting the model be unaligned and just be what it is---or aligning to a specific set of values (e.g.\ expert values) are fraught with issues of bias, lack of representation, and potential for harm. Therefore, aligning AI systems to human values is the most pragmatic and ethical approach to AI alignment.
