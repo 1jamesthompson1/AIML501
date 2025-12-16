@@ -172,13 +172,48 @@ DPO provides a more effective way to utilize the same underlying feedback data t
 
 \subsection{Kahneman-Tversky Optimization}
 
-Traditional preference optimization methods such as RLHF and DPO set out with the objective of making the model maximize the likelihood of preferred responses over dispreferred responses. KTO \cite{ethayarajhKTOModelAlignment2024} sets out to change the objective of a language model to maximize the utility of generations, which is how useful the generation is for the end user. This introduces the concept of Human-aware losses (HALOs) which are optimizing for what the human would want rather than some analytical maximum likelihood. Furthermore \cite{ethayarajhKTOModelAlignment2024} proposes a new objective function from the HALO family that works on only binary preference data\footnote{Given a prompt and response a labellers just need to label the response as desirable or undesirable}, making data collection easier and more natural.
+Traditional preference optimization methods such as RLHF and DPO set out with the objective of making the model maximize the likelihood of preferred responses over dispreferred responses. KTO \cite{ethayarajhKTOModelAlignment2024} sets out to change the objective of a language model to maximize the perceived utility of generations, which is how useful the generation is for the end user. The key being perceived utility is not the same as actual utility due to cognitive biases discussed in the follow sections. Ethayarajh et Al introduces the concept of Human-aware losses (HALOs) which optimize for what human perceive as the best outcome. It is shown that DPO and PPO are both HALOs which can help explain their success. Furthermore Ethayarajh et Al proposes a new objective function from the HALO family that works on only binary preference data\footnote{Given a prompt and response a labellers just need to label the response as desirable or undesirable}, making data collection easier and more natural.
+
+\subsubsection{Prospect Theory}
+
+KTO is built off the foundation of prospect theory \cite{tverskyAdvancesProspectTheory1992}  which is a theory to explain how humans make decision when dealing with uncertainty and risk \footnote{For example why when humans are given the choice between \$50 and a 50\% chance to win \$100, they often prefer the sure \$50, when they are both worth the same amount. Furthermore this effect is still present when the gamble is worth even more (\$110) \cite{kahnemanProspectTheory1979}}. It explains several cognitive biases that humans have when making decision involving risk, namely loss aversion (losses hit harder than gains), probability weighting (overweight small probabilities and underweight large probabilities), and reference dependence (we evaluate outcomes relative to a reference point which is usually the status quo). In relation to a LLM this means that when a human is evaluating the response of the model they are going to perceive the quality (utility) of the response in a biased way, so using a objective function that takes into account (Human-aware) these biases should lead to better alignment.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[
+        axis lines=middle,
+        xlabel={True Value $x$},
+        ylabel={Perceived Value $v(x)$},
+        xmin=-1.2, xmax=1.2,
+        ymin=-2.2, ymax=1.2,
+        xtick=\empty,
+        ytick=\empty,
+        width=12cm,
+        height=8cm,
+        legend pos=north west,
+        domain=-1:1,
+        samples=200
+    ]
+    
+    % Kahneman-Tversky curve (losses convex, gains concave)
+    \addplot[red, thick, dashed] {x>=0 ? x^0.45 : -1.5*(-x)^0.45};
+    \addlegendentry{Kahneman-Tversky}
+
+    % Reference point
+    \node at (axis cs:0,0) [anchor=north east] {Reference point};
+    
+    \end{axis}
+\end{tikzpicture}
+\caption{Implied human value functions showing loss aversion: concave for gains (risk averse) and convex for losses (risk seeking). Adapted from \cite{tverskyAdvancesProspectTheory1992}, with a change of terminology to match the context of value alignment and exaggeration for illustration.}
+\label{fig:prospect_theory}
+\end{figure}
+
+Prospect theory does introduce several key concepts. Firstly is each random variable $Z$ (the LLM output) has a utility which is determined by $\sum_{z \in Z} w(z) v(z-z_0)$. Secondly is the weighting function $w(z)$ which is used to weight the probabilities of each outcome $z$ in a biased way. Finally is the value function $v(z-z_0)$ which determines how good/bad an outcome is compared to a reference point $z_0$, this also will also include some bias from the individuals perspective.
 
 \subsubsection{How KTO works}
 
-KTO is built off the foundation of prospect theory \cite{tverskyAdvancesProspectTheory1992}  which is a theory to explain how humans make decision when dealing with uncertainty and risk \footnote{For example why when humans are given the choice between \$50 and a 50\% chance to win \$100, they often prefer the sure \$50, when they are both worth the same amount. Furthermore this effect is still present when the gamble is worth even more (\$110) \cite{kahnemanProspectTheory1979}}. It explains several cognitive biases that humans have when making decision involving risk, namely loss aversion (losses hit harder than gains), probability weighting (overweight small probabilities and underweight large probabilities), and reference dependence (we evaluate outcomes relative to a reference point which is usually the status quo). The key components of prospect theory are the value function and the weighting function. The value function is what determines how good/bad an outcome is compared to a reference point, and the weighting function is used to weight particular outcomes in a biased way in line with how humans perceive probability.
-
-KTO translates this theory into an objective function that uses binary preference data and a modified value function. It only needs a database of prompts and responses labelled as either desirable or undesirable ($d=1$ for desirable, $d=-1$ for undesirable) where the reference point is neutral ($0$). The KTO loss function is defined as:
+KTO applies the idea of prospect theory by modifying the canonical utility function (shown in \ref{fig:prospect_theory}) provided in \cite{tverskyAdvancesProspectTheory1992} to work for a language model fine tuning objective function. Namely it does his by omitting the weighting function (as users only see the final response, not the full probability distribution), making some minor adjustments for computational stabilty and using the Kullback-Leibler divergence \cite{kullbackInformationSufficiency1951} (between current model and reference model which is usually the SFT model) as a dynamic reference point. Notably this means that KTO only needs a database of prompts and responses labelled as either desirable or undesirable ($d=1$ for desirable, $d=-1$ for undesirable) where the reference point is neutral ($0$). The KTO loss function is defined as:
 
 \begin{equation*}
 \mathcal{L}_{\mathrm{KTO}}(\pi_\theta, \pi_{\text{ref}}) = \mathbb{E}_{(x, y, d) \sim D} \left[ \lambda(d) - v(x,y)\right]
@@ -201,11 +236,15 @@ r_\theta(x,y) &= \log \pi_\theta(y|x) - \log \pi_{\text{ref}}(y|x) \quad \text{S
 z_0 &= D_\text{KL} \left( \pi_\theta(y|x) \| \pi_{\text{ref}}(y|x)\right) \quad \text{Dynamic reference point}
 \end{aligned}
 \end{equation*}
-The three  hyperparameters $\beta$ is a temperature parameter, and $\lambda_D$, $\lambda_U$ are scaling parameters for desirable and undesirable responses respectively. In the references implementation and experiments $\lambda_D = \lambda_U = 1$ and the reference model is a SFT model.
+The three  hyperparameters $\beta$ is a risk aversion parameter, and $\lambda_D$, $\lambda_U$ are scaling parameters for desirable and undesirable responses respectively. In the references implementation and experiments $\lambda_D = \lambda_U = 1$ and the reference model is a SFT model.
 
 \subsubsection{Relevance}
 
-Collecting the ranked preference data which is needed by normal alignment methods is normally quite expensive \cite{casperOpenProblemsFundamental2023} where binary like/dislike information is much more natural and less invasive to collect. KTO is shown to be more efficient and more robust to data imbalances than DPO. Furthermore a model of sufficient size (~13B) does not need a SFT step prior to KTO which greatly reduces computational requirements. Furthermore KTO shows similar performance without using a reference model \footnote{This is done by assuming that the reference model returns a uniform distribution across all outputs given $x$} which also halves the memory requirements when training. 
+KTO offers several key logistical and theoretical advantages over prior preference optimization methods, that make it an attractive method for alignment.
+Firstly the logistical advantage. Collecting the ranked preference data which is needed by normal alignment methods is normally quite expensive \cite{casperOpenProblemsFundamental2023} where binary like/dislike information is much more natural and less invasive to collect. KTO is shown to be more efficient and more robust to data imbalances than DPO. Furthermore a model of sufficient size (~13B) does not need a SFT step prior to KTO which greatly reduces computational requirements. Furthermore KTO shows similar performance without using a reference model \footnote{This is done by assuming that the reference model returns a uniform distribution across all outputs given $x$} which also halves the memory requirements when training.
+Secondly are the theoretical advantages. KTO is the first alignment method to explicitly take into account human cognitive biases when optimizing for alignment.
+
+Another key point is the concept of applying prospect theory to alignment. Ethayarajh et Al apply it in the context of preference optimization, however propect theory and the biases in human cognition can be applied more broadly than that in alignment. \todo{There is something here yet I am not quite sure. One could change the axises in \ref{fig:prospect_theory} to represent the concept of actual values and perceived values (however this feels like trying to shoehorn it in too much when teh concept of revealed preferences is more appropriate). Another idea is that prospect theroy explains how users wil provie feedback ina biased way and we should actualy be using the prospect theyr to map that to the tryue thing we shold align for, might help with g eneralisation.}
 
 \subsection{Constitutional AI}
 
@@ -294,9 +333,13 @@ The next step involves using the SL-CAI model to generate pairs of responses to 
 
 In the context of when this paper was released there was a key dilemma of helpfulness vs harmlessness in large language models. Therefore, this paper set out to make a model that is both helpful and harmless, without sacrificing one for the other. Further research has expanded the horizons to be concerned with more than just harmfulness vs helpfulness trade off. As hinted at by the authors in \cite{baiConstitutionalAIHarmlessness2022}, there is room for improvement in the CAI method to make it focus on more than just harmlessness vs helpfulness. This can be done by modifying the constitutions to include more diverse principles as well as modifying the red teaming prompts to target more diverse scenarios (i.e controversial topics, political leanings, etc). Collective Constitutional AI \cite{huangCollectiveConstitutionalAI2024} is the process of generating the constitution through public consultation.
 
+\subsection{Evaluation of Large Language Model alignment}
+
+\todo[inline]{Talk about how we really care about how the flow on effects are. I.e societal impacts, individual impacts of the model. Yet what we are measuring are single model ouputs (in general). Talk about how we can measure these flow on effects better. Talk about the limitations of current evaluation methods.}
+
 \subsection{Current technical alignment limitations}
 
-The goal of alignment is to ensure that you create a model that is aligned with what the designer and end users want. However there are several challenges that make this difficult namely being alignment data and effectiveness of alignment methods. Furthermore there is also a prevalent background concern of what/who the model is being aligned towards.x
+The goal of alignment is to ensure that you create a model that is aligned with what the designer and end users want. However there are several challenges that make this difficult namely being alignment data and effectiveness of alignment methods. Furthermore there is also a prevalent background concern of what/who the model is being aligned towards.
 
 Preference optimization is the most used method of alignment which requires a dataset of prompts and preferred responses (ranked, or binary). There are several challenges with this data. Namely the cost of collecting it can be prohibitive \cite{leeRLAIFVsRLHF2024,casperOpenProblemsFundamental2023} and secondly is the concern of of what/who the model is being aligned towards.
 
@@ -341,9 +384,9 @@ These taxonomies provide a useful framework for understanding human values and h
 
 \subsection{Value surveys}
 
-One of the key features of early modern value taxonomies is that they were created with associated survey instruments that allowed researchers to measure the values of individuals. Rokeach \cite{rokeachNatureHumanValues1973} created the Rokeach Value Survey (RVS) which asked participants to rank the 36 values in order of importance to them. Schwartz \cite{schwartzUniversalsContentStructure1992} created the Schwartz Value Survey (SVS) which asked participants to rate the importance of each value on a 9-point scale. These surveys allowed researchers to measure the values of individuals and groups and provided a way to understand how values relate to behavior. More recently there have been broader efforts to create values surveys that capture the values of large groups of people. The world values \cite{WVS2020} and the New Zealand Attitudes and Values Study (NZAVS) \cite{NZAVS2025} are two examples of large scale surveys that map the values of entire populations (global and country respectively).
+One of the key features of early modern value taxonomies is that they were created with associated survey instruments that allowed researchers to measure the values of individuals. Rokeach \cite{rokeachNatureHumanValues1973} created the Rokeach Value Survey (RVS) which asked participants to rank the 36 values in order of importance to them. Schwartz \cite{schwartzUniversalsContentStructure1992} created the Schwartz Value Survey (SVS) which asked participants to rate the importance of each value on a 9-point scale. Later Schwartz replaced the SVS with the Portrait Values Questionnaire (PVQ) \cite{schwartzOverviewSchwartzTheory2012} which was less abstract and better at soliciting the values from a diverse set of people as respondents are answering questions of the form "How much is this person like you", and by rating their similarity with 40 different portraits one can infer someones values. These surveys allowed researchers to measure the values of individuals and groups and provided a way to understand how values relate to behavior.
 
-Interestingly these surveys help us understand how values vary yet don't conform to a strict compact taxonomy. Each of the survey has around 300 questions that try to capture the complexity of human values. This means that they provide a rich and granular understanding of the respondents values. They are hard to map to underlying 'foundational values' such as those proposed by Rokeach and Schwartz. Yet due to their breadth of questions provide useful data to help train \cite{nieSurveytoBehaviorDownstreamAlignment2025,liCultureLLMIncorporatingCultural2024} and evaluate \cite{durmusMeasuringRepresentationSubjective2024,zhaoWorldValuesBenchLargeScaleBenchmark2024,aroraProbingPreTrainedLanguage2025}Large Language Models (LLMs) on human values.
+All the above surveys (PVQ, SVS and RVS) are designed to measure the values of individuals in relation to be a predefined taxonomy of values. They have relatively few questions (<50), abstract in nature and quick to complete. An alternative path for measuring values is to create broader surveys that try to capture the values of large groups of people through many questions. Importantly these surveys do not map directly to a predefined taxonomy of values yet instead try to capture the complexity of human values through many questions (~300). The World Values Survey \cite{WVS2020} is the biggest example of this where they have been surveying over 1,000 people from over 100 countries every 5 years since 1981. The New Zealand Attitudes and Values Study (NZAVS) \cite{NZAVS2025} is another example of a large scale value survey that has been running since 2009 surveying around 30,000 New Zealanders every year. These surveys don't correspond to a strict values taxonomy yet instead provide granular data from each individual. This data can help train \cite{nieSurveytoBehaviorDownstreamAlignment2025,liCultureLLMIncorporatingCultural2024} and evaluate \cite{durmusMeasuringRepresentationSubjective2024,zhaoWorldValuesBenchLargeScaleBenchmark2024,aroraProbingPreTrainedLanguage2025}Large Language Models (LLMs) on human values.
 
 These surveys provide granular data yet struggle from well documented issues of self-reporting bias \cite{podsakoffCommonMethodBiases2003} and social desirability bias \cite{crowneNewScaleSocial1960}. This means that the values reported by respondents may not accurately reflect their true values. From an economics perspective this is the distinction between stated values and revealed values. Stated values are those that people report in surveys, while revealed values are those that can be inferred from their behavior. This provides a caveat and limitation to using value surveys as a way to represent human values for AI alignment.
 
@@ -353,4 +396,5 @@ For the purposes of building AI systems understanding values is only useful as f
 However the idea that values can lead to and predict behavior has been argued \cite{russellh.fazioDirectExperienceAttitudeBehavior1981,schwartzOverviewSchwartzTheory2012}. Furthermore in the reinforcement learning literature there is evidence that given examples of actions a model can learn a opaque value function that can predict what actions will be made next (called inverse reinforcement learning). The methods that are most effective for achieving this is through combining multiple signals (stated values, observed behavior and explicit feedback) \cite{adamowiczCombiningRevealedStated1994}. In machine learning this is done through collaborative learning where different types of value signals at different times are used to train/fine-tune a model \cite{hadfield-menellCooperativeInverseReinforcement2024,ouyangTrainingLanguageModels2022}. Using multiple signal also help mitigate the gap between true values and stated values. Ideally one would just align a model to a persons values then behavior would follow. However due to the gap between values and behavior one needs to provide additional feedback to the model which for LLM is done through preference optimization methods outlined above.
 
 \subsection{Why human values are important for AI alignment}
+
 The is-ought problem is an old philosophical concept that states that one cannot decide what ought to be purely from what currently is \cite{Hume1739Treatise}. This presents a challenge for AI alignment, as we must determine what values we ought to align AI systems to, and all we currently have is what human values currently are. Our models will have some values and some behavior patterns whether we intend them to or not. Whether certain sets of human values are correct or not is a philosophical question that is outside the scope of this work. Yet the distribution of human values is the best target we have to align AI systems to, they might not be the perfect values yet the best target. This is because human values (specifically democratic and representative values) are the closest to a consensus, and therefore under democratic ideals represent the best target for alignment. Alternative methods like inaction —letting the model be unaligned and just be what it is— or aligning to a specific set of values (e.g.\ expert values) are fraught with issues of bias, lack of representation, and potential for harm. Therefore, aligning AI systems to human values is the most pragmatic and ethical approach to AI alignment.
