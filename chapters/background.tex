@@ -345,7 +345,7 @@ Preference optimization is the most used method of alignment which requires a da
 
 Current alignment methods demonstrate success on certain metrics that there methods work, that is they can make model more helpful, more honest, and less harmful \cite{ouyangTrainingLanguageModels2022,baiConstitutionalAIHarmlessness2022,rafailovDirectPreferenceOptimization2024,ethayarajhKTOModelAlignment2024}. Yet the metrics used (broadly either human or AI evaluation of paired responses) miss out on deeper concerns around alignment. The first concern is that current methods may only achieve \textit{shallow alignment} that is the model appears aligned during training yet fails to generalize this alignment to new contexts. Another concerns is \textit{inner alignment} where the training process is aligned (outer-alignment) yet the model itself has learned objective that are misaligned with the intended objective. Finally we observe models to make sure they perform how we expect them too, therefore we need \textit{scalable oversight} methods to ensure that as models become more capable we can still ensure they are behaving correctly. These concerns are not new concerns in AI safety \cite{amodeiConcreteProblemsAI2016a} yet they remain open problems in the context of large language models and their alignment.
 
-\section{Broader AI safety concerns}
+\section{Desiderata for AI}
 
 \todo[inline]{
     Take the problem of alignment and expand it broader AI alignment concerns.
@@ -353,19 +353,76 @@ Current alignment methods demonstrate success on certain metrics that there meth
     Introduce the concepts from PublicAI, incentives and collective intelligence.
 }
 
-\subsection{Purpose of AI}
+\subsection{Goal of AI}
 
 \todo[inline]{Talk about how the purpose of AI is to help humanity achieve its goals. Therefore we need to ensure that the AI is aligned to human values and goals. This is a key concern in AI safety as misaligned AI can lead to catastrophic outcomes.}
 
-\subsubsection{Who is it made for?}
+The status quo of the world is here. If we are going to add a new technology to society it should be to improve the society by some metric (what metric).
+
+The metric that makes sense is some form of human flourishing (idea from https://survivalandflourishing.fund/). 
+
+Currently AI is being made for profit maximization of companies. It is a misalignemtn fo goals ...
+
+
+\subsection{Stakeholders of AI}
 \todo[inline]{Look at incentives of for-profit AI development. Introduce the concept of public AI. How this better serves humanity as a whole rather than just the interests of a few. Talk about the value aggreagtion problem and how laignign to the public is good.}
 
-\subsubsection{Who is it aligned to?}
+Who is AI even for. Is it for current people, future people etc. It should be for everyone. Ideas of non exclusion, as well as non domination.
+
+Currently there is concerns for the "users" of AI being companies and so the benefits of the AI being towards those companies and a select few.
+
+\subsection{Alignment of AI}
+
+Given that everyone is the stakeholder of AI we should align collectively too all of them.
+
+Full stack alignment is in the institutions and systems surrounding AI as well.
+
+As showed above the goal of AI and the stakeholders of AI are meaning taht AI is not aligned to thebest interests of "human flourishing".
+
 \todo[inline]{Look into some philosophical concepts around how the collective the best baseline if we have no other gold standard. Provide some rationale as to why using the public as the source of values is a good idea, as opposed to some "gold standard" values provided by experts.
-This will lend in the wpulbic AI. As AI is for the public, for the greater good etc.
+This will lend in the public AI. As AI is for the public, for the greater good etc.
 }
 
-\subsection{Problems of AI}
+\subsection{How to do AI}
+
+We want Ai to be built in a fully aligned system. In a world where the institutions and systems around AI are aligned to human values and goals.
+
+Currently we don't have that as the institutions and systems around AI are not aligned to human values and goals.
+
+A better way forward is that of AI that is funded by, owned by, and operated by the public for the public good. This is the idea of PublicAI \cite{publicai2024}...
+
+\section{Problems of AI}
+
+AI alignment is a key concern in AI safety. However there are several other concerns that need to be addressed to ensure that AI is safe and beneficial for humanity.
+
+\subsection{Concrete problems of AI safety}
+
+negative side effects sometimes we wantt hte model to do things yet sometimes we don't want it to do thinkg
+
+Mis generalization how we might align and then it operates different in tet
+
+Scalable oversight as models getm ore powerful how to know if they are being alright
+
+Robustness to distributional shift when the model is in a new environment how to ensure it is still aligned
+
+\subsection{Catastrophic risks of AI}
+https://arxiv.org/abs/2306.12001
+https://futureoflife.org/resource/catastrophic-ai-scenarios/
+
+Even if style framing. There are still some great risks of AI.
+
+Runaway self-improvement
+
+Weapons of mass destruction (cyber, chemical etc)
+
+Mis aligned AI
+
+\subsection{Preventing catastrophic risks of AI}
+
+Stopping should we do 
+Stopping can we do it
+
+Deep alignment (the topics here)
 
 \todo[inline]{Talk about general overarhcing problems of AI safety. \cite{amodeiConcreteProblemsAI2016a} is a good starting point. Talka bout negative side effect, mis generalization, scalable oversight and robustness. This is also a good page to look from: https://www.princetonalignment.org/papers. Also other problemsl ike value lock in etc}
 
@@ -392,6 +449,8 @@ These surveys provide granular data yet struggle from well documented issues of 
 
 \subsection{Values to behavior}
 For the purposes of building AI systems understanding values is only useful as far as they can predict behavior (in the form of responses and actions). That is we want the AI system to behave the same or better in all situations that a human would. There is contention in psychology and AI alignment research around the values to behavior gap \cite{kollmussMindGapWhy2002,gabrielArtificialIntelligenceValues2020}. When one tries to bridge the gap between understanding someones behavior and values we run into common problems namely; non-identifiability of values (Many different values can lead to the same behavior), specification gaming (as mentioned above) and extrapolation errors. Non-identifiability and extrapolation errors are demonstrated clearly in inverse reinforcement learning (IRL) \cite{abbeelApprenticeshipLearningInverse2004}. Furthermore it can be shown that human values are fickle and can stem from ones previous actions as humans rationalize what they have done \cite{leonfestingerTheoryCognitiveDissonance1957}. This is the reasons as to why many AI alignment researchers focus on direct behavior alignment through revealed values with pairwise preference ranking methods as discussed above like DPO, RLHF and KTO.
+
+\todo[inline]{Use some of the reference from \cite{klingefjordWhatAreHuman2024} and otherresearch to talk more about values and different definitions.}
 
 However the idea that values can lead to and predict behavior has been argued \cite{russellh.fazioDirectExperienceAttitudeBehavior1981,schwartzOverviewSchwartzTheory2012}. Furthermore in the reinforcement learning literature there is evidence that given examples of actions a model can learn a opaque value function that can predict what actions will be made next (called inverse reinforcement learning). The methods that are most effective for achieving this is through combining multiple signals (stated values, observed behavior and explicit feedback) \cite{adamowiczCombiningRevealedStated1994}. In machine learning this is done through collaborative learning where different types of value signals at different times are used to train/fine-tune a model \cite{hadfield-menellCooperativeInverseReinforcement2024,ouyangTrainingLanguageModels2022}. Using multiple signal also help mitigate the gap between true values and stated values. Ideally one would just align a model to a persons values then behavior would follow. However due to the gap between values and behavior one needs to provide additional feedback to the model which for LLM is done through preference optimization methods outlined above.
 
