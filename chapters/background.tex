@@ -347,37 +347,40 @@ Current alignment methods demonstrate success on certain metrics that there meth
 
 \section{Desiderata for AI}
 
-\todo[inline]{
-    Take the problem of alignment and expand it broader AI alignment concerns.
-    Talk about mis generalization, and specification gaming.
-    Introduce the concepts from PublicAI, incentives and collective intelligence.
-}
+Alignment is a key concern in AI safety as we want to ensure that AI systems act and behave in a way that aligns with what humans want. More broadly we are at a transitional point in the history of Artificial Intelligence where the technology, systems and institution we build around AI have the potential to shape the future of humanity. Therefore it is paramount that we understand the context around AI, ways in which AI could bring about net negative change and the way in which we would like AI to built and integrated into society.
 
 \subsection{Goal of AI}
 
-\todo[inline]{Talk about how the purpose of AI is to help humanity achieve its goals. Therefore we need to ensure that the AI is aligned to human values and goals. This is a key concern in AI safety as misaligned AI can lead to catastrophic outcomes.}
+Anytime we add something to the world we should ensure that it is worth adding and going to provide at least net positive benefit to humanity. Measuring net positive benefit is hard and requires a metric that we can measure the positive and negative impacts of AI on humanity with. A complete discussion and outline of such a metric is out of scope for this section, furthermore a single perfect "goal" is not likely to exist \cite{amodeiConcreteProblemsAI2016a} and if it did wouldn't be a useful goal due to Goodhart's law \cite{Goodhart1975}. However we can outline some high level ideas of what a good goal for the concept of AI could be, with the caveat and understanding that this is not a perfect goal and simply some high level guidance.
 
-The status quo of the world is here. If we are going to add a new technology to society it should be to improve the society by some metric (what metric).
+A good starting point for a "goal of AI" is the idea of human flourishing \cite{vanderweelePromotionHumanFlourishing2017} that is split into 5 domains that are near universally agreed upon as good things for humans to have; happiness and life satisfaction, mental and physical health, meaning and purpose, character and virtue, close social relationships. 
+\begin{definition}
+The goal of AI should be to help maximize the median human flourishing across all people currently alive and in the future. \footnote{Including non humans at the root level of the goal is plausible. However one could reach the same conclusions of animal welfare by maximizing the human flourishing of "animal concerned" humans.}
+\end{definition}
 
-The metric that makes sense is some form of human flourishing (idea from https://survivalandflourishing.fund/). 
+We can see the utility of this goal as it is broad enough to allow each individuals own interpretation of what human flourishing means to them, while still allowing us to understand harms and benefits of various AI systems. More discussion is found in a later section on how to understand human values.
 
-Currently AI is being made for profit maximization of companies. It is a misalignemtn fo goals ...
-
+\todo[inline]{Feel like I need to add something more here that outlines what is currently missing from the goal of AI. Like a little critique of the status quo.}
 
 \subsection{Stakeholders of AI}
-\todo[inline]{Look at incentives of for-profit AI development. Introduce the concept of public AI. How this better serves humanity as a whole rather than just the interests of a few. Talk about the value aggreagtion problem and how laignign to the public is good.}
 
-Who is AI even for. Is it for current people, future people etc. It should be for everyone. Ideas of non exclusion, as well as non domination.
+if we are on the precipice of a new technological revolution we need to understand what and importantly who is at stake. artificial intelligence has the potential to impact everyone on the planet, an american firm that utilizes ai to handle customer service can take away jobs from urban workers in india. it can also have a impact through time, an ai paperclip factory that turns everyone into paperclips would extinguish humanity in the future and remove all possible positive future for humanity. ignoring certain groups of humans when designing and building ai systems leads to optimization for the benefit of one group over the other. pressingly this happens when we ignore future people and take short term gains and push the costs and risks onto future generations or when we extract value from marginalized groups to benefit a select few \footnote{like modern day colonialism where the worlds rich extract data, rare earth materials and labour from the worlds poor and use it for their own gain. \cite{crawfordAtlasAIPower2021}}.
 
-Currently there is concerns for the "users" of AI being companies and so the benefits of the AI being towards those companies and a select few.
+There are many stakeholder of AI and to ensure that they are all represented we need to have the concepts of non-exclusion and non-domination. This means that no group of people should be excluded from the benefits of AI and no group of people use of AI should dominate over another group of people use of AI. When the groups are globally and temporally separated strict adherence to these principles could ensure that AI is atleast evenly distributed across all people.
+
+The problem however is when not all the stakeholders of AI are considered or empowered. Looking at the example of the customer service AI which will be designed, developed and deployed by a company for use by other companies. In a fair market it will make both companies rich at the expense of the workers who have lost their jobs. AI systems are overwhelming targeting companies as their 'users' which leads to companies driving the development and deployment of AI systems with disregard of the negative externalities of the true stakeholders.
 
 \subsection{Alignment of AI}
 
-Given that everyone is the stakeholder of AI we should align collectively too all of them.
+The actions of a few can impact the many. AI is a technology that can multiple the impact of ones actions. Therefore we need to ensure that everything around AI is aligned to the best interests of all stakeholders of AI. Yet due to no universal truth to govern what is best for all stakeholders we need to have AI that is aligned to the collective best interests of all stakeholders of AI. It is unclear what the method of collective alignment would be. Different subgroups of the stakeholders have different values and goals, aligning collectively therefore means finding a way to have a target which can be done in multiple ways.
+\begin{enumerate}
+    \item \textbf{Pluralism: } Different groups will have different values. We have no ground truth to guide us on which values are better than the other. Therefore we should align models to be pluralistic in nature and make decisions that reflect this diversity along with the uncertainty about which values are most important. This can result in multiple "aligned" models or one model that can reflect different values in different contexts. Most aligned with the idea of agnostic democracy \cite{Wenman_2013}.
+    \item \textbf{Aggregation: } With the different sets of values from different groups we can aggregate these values to find a middle ground (naive averaging) however this can lead to poor compromises and tyranny of the majority \cite{millLiberty2011,tocquevilleDemocracyAmerica1835}. Therefmore more complex aggregation that weight different groups values by impact, vulnerability and importance can be used to find a better middle ground.
+    \item \textbf{Conglomeration: } If one assumes that all people can mostly agree than we can use idea from deliberative democracy \cite{habermasFactsNormsContributions1998} to find a set of values that all people can agree on \footnote{All people agree can be operationally defined as "maximum equal approval" \cite{jonathanstrayPracticalDefinitionPolitical}}. This is where methods like citizen assemblies and tools like polis \cite{compdemocracyPolis2025} can be used to find a set of values that all people can agree on.
+\end{enumerate}
 
-Full stack alignment is in the institutions and systems surrounding AI as well.
+Regardless of the method of aligning to the stakeholders, the current goal of AI is misaligned with this definition as the goal of most AI systems is to maximize profit for companies and shareholders. It shouldn't take excessive development to understand the negative externalities of profit motives \cite{stiglitzMarketsMarketFailures1989}. The problem is not that GPT-4 itself is aligned to the goal of profit maximization, but that is second order effects (company share holder profit) that cause the development and deployment of the AI system to maximize profit. A related demonstration of this misalignment is the proliferations of recommender systems. These machine learning models that started with the intention of helping users find content they enjoy, relevant information have turned into systems that prioritize engagement (and therefore ad revenue) over user flourishing \cite{milanoRecommenderSystemsTheir2020}. We can see that the incentives of the institutions and frameworks that built the systems \textit{captured} the original incentive of the AI system which could of been "help the user", "show the user something they will enjoy". This is why it is important not just to align the AI system itself, but also the institutions and systems around AI to be aligned to human values and goals. Full stack alignment \cite{edelmanFullStackAlignmentCoAligning2025} is this idea exactly where you need to make sure that individual models, oversight models and everything in the middle are all aligned to the target that we want.
 
-As showed above the goal of AI and the stakeholders of AI are meaning taht AI is not aligned to thebest interests of "human flourishing".
 
 \todo[inline]{Look into some philosophical concepts around how the collective the best baseline if we have no other gold standard. Provide some rationale as to why using the public as the source of values is a good idea, as opposed to some "gold standard" values provided by experts.
 This will lend in the public AI. As AI is for the public, for the greater good etc.
@@ -385,12 +388,17 @@ This will lend in the public AI. As AI is for the public, for the greater good e
 
 \subsection{How to do AI}
 
-We want Ai to be built in a fully aligned system. In a world where the institutions and systems around AI are aligned to human values and goals.
+If AI has any chance of achieving the goal of maximum average human flourishing we need to ensure that it is done in a way that is aligned to this goal. Full stack alignment is the idea of this however each part of the stack needs to be defined. A key idea here however is that due to objective capture the higher up the stack the alignment is the more influential the alignment is. Therefore aligning the institutions and frameworks which govern and build AI systems has the highest leverage for ensuring that AI is built in a way that is aligned to human values and goals.
 
-Currently we don't have that as the institutions and systems around AI are not aligned to human values and goals.
+Leaving AI development to private companies driven by profit might be effective in some ways, drive rapid development yet it is fundamentally misaligned with the goal of maximizing human flourishing (especially in the long term). A better framework and systems around AI development is needed. Currently a democratic framework rules the world as the most progressive and forward thinking way to govern large groups of people.
+\begin{quote}
+``Democracy is the worst form of government, except for all the other forms that have been tried from time to time.''\cite{churchillwinstonsSpeechHouseCommons1947}.
+\end{quote}
+Even though democracy has it flaws it is arguably the most admissible way to govern. Therefore using democratic ideals and frameworks to also govern, spearhead and deploy AI is a good starting point for ensuring that the goal of AI is upheld.Operationally this means making artificial intelligence a public good that is governed and operated by the public for the public. \cite{publicaiPublicAIWhite2024}
 
-A better way forward is that of AI that is funded by, owned by, and operated by the public for the public good. This is the idea of PublicAI \cite{publicai2024}...
+Public AI provides a good that is both non-dominate and non-exclusionary. This method of making it a public good provides has three key features; public access, public accountability and permanent availability. Public access ensure that the opportunities to use AI and receive its benefits are available to all people. Public accountability crucially ensure that the stakeholders of AI (all people) have a say in how AI is developed and deployed, which allows AI the opportunity to attain the goal of maximizing median human flourishing. Finally the permanence feature allows it to be practically used and built up in much the same way that the electrical grid or internet is built and maintained.
 
+There are two important failure modes however in this public approach. One is economic failure where the public good is not economically sustainable and therefore turns to undesirable methods of funding (ads, data extraction etc) \footnote{Which is very much similar to the way that the internet was developed. It started off funded by the public sector (laying cables etc), however then for anyone to have a successful business offered on the internet it had to be "free" to use and so companies (E.g Google, Facebook) needed to find alternative methods of funding which has proven detrimental to greater public health}.The second is more of a global coordination/cooperation failure, even if all AI in the world is public AI one country could still prioritize its own interests over the collective good.
 \section{Problems of AI}
 
 AI alignment is a key concern in AI safety. However there are several other concerns that need to be addressed to ensure that AI is safe and beneficial for humanity.
