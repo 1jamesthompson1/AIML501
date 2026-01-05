@@ -22,6 +22,8 @@
 \usepackage{microtype}
 
 \usepackage{todonotes}  % for adding todo notes REMOVE BEFORE FINAL
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{references.bib}
 
 %  We don't want figures to float so we define
 %
@@ -120,6 +122,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %\bibliographystyle{ieeetr}
-\bibliographystyle{acm}
-\bibliography{references}
+\printbibliography
+
 \end{document}
