@@ -1,20 +1,47 @@
-\section{What I will do}
+\section{Why}
 
-The goal of this project is to develop, implement and evaluate for future feasibility a method for aligning large language models to a set of representatively collected human values. This will be an end-to-end project that involves using current survey data and collecting new data, aligning a large language model using different methods and evaluating the effectiveness of the alignment.
+Current methods for training large language models involve scraping the internet for large amounts of text data, creating powerful next-token prediction models. To turn these into something useful for end users (e.g. chatbots or assistants), the model is then aligned to behave in desired ways, typically by contracting human labelers/annotators/demonstrators to provide training data. This has made modern LLMs highly useful.
+Problematically, current alignment methods are opaque and the alignment target is often specified privately by a small set of individuals (e.g. the people writing instructions for annotators). This requires trust from the public that the model is aligned with their values. Even if the values of the creators were initially acceptable, they are usually set within for-profit organizations with incentives that can distort alignment (e.g. maximizing engagement or revenue). Therefore we cannot assume these models are aligned to the public good.
 
-\section{What problem I will solve}
+There are multiple challenges, however, with aligning models to the public good, or more formally maximizing median human flourishing.
+First is how to define what the public good is, that is what would the alignment target even look like? Avenues to explore are; lists of principles (like constitutional AI \cite{baiConstitutionalAIHarmlessness2022}), value sets from a taxonomy of human values \cite{schwartzUniversalsContentStructure1992,rokeachNatureHumanValues1973}, fine grained "preference datasets" (like that collected for RLHF \cite{ouyangTrainingLanguageModels2022} or similar), or more complex structures like Moral graphs \cite{klingefjordWhatAreHuman2024}.
+Second is that even if we understood what an alignment target should look like, it is non-obvious how to collect data that represents it in a way that is representative of the public.
+Third is that once this alignment structure is defined and data collected to turn it into a valid instance of an alignment target it is an open question how best to align a subsequent model towards this target. This becomes particularly challenging given that the alignment target could be a pluralistic target and thus require fair distinct treatment of different subgroups.
+Finally, even if we had a method to align a model to this target, it is unclear how we would evaluate success. Current methods are generally short term and often take the form of pairwise comparisons or held-out test sets of expected responses. Notably, they do not usually provide out-of-distribution evaluation or capture multi-step interactions and downstream outcomes, and they are often designed and performed by the same select few individuals who designed the alignment target in the first place.
 
-Gaps are
-How to define the correct sort of alignment target
-How do we collect data that represents the alignment target
-How do we use this data to align a large language model
-How do we evaluate the success of this alignment to the target
+As AI moves towards more general capabilities and is deployed in more powerful and high-stake settings, the lack of democratic ideals within the full stack of AI development becomes increasingly apparent. Significant work is needed to develop methods that allow us to create AI systems by the public (participation) and for the public (accountability, transparency).
 
-Current methods for training large language models involve scraping the internet for large amount of text data. This creates a very powerful next token prediction model. Then to turn this models into something useful for the end user (e.g. chatbots, assistants, robo doctor etc) the model is aligned to how we want it to behave. Current methods for alignment involve contracting human labelers/annotators/demonstrators to provide data to give to the model on how we want it to behave. Problematically this is a opaque process that gives the end user little insight into what the model is "designed to do". Instead we can let the public directly and indirectly decide on what values they want the model to be aligned to. More so the public as the users and recipients of the model's outputs should have a say in the way that the model behaves. Large language models are on track to become tomorrows, accountants, lawyers, doctors and more, we need to ensure that we the people are the ones who decide on what kind of people they are.
+\section{What}
 
-\section{Timeline}
+The goal of this project is to address some gaps in the current AI alignment landscape by a proof-of-concept end-to-end project. It will attempt to align a large language model to a set of human values collected from the public and to develop an evaluation method that can better measure alignment success on these values. Specifically, the project will set out to answer a series of research questions.
 
-The project will be carried out over three main phases. The first phase will be the organization and clustering of existing survey data to represent human values. The second phase will be an iterative process of aligning a large language model and evaluating its performance. The third phase involves collecting specific alignment data to further refine and train the model, followed by a final evaluation.
+\begin{enumerate}[label=\textbf{RQ\arabic*:}, ref=RQ\arabic*, leftmargin=*, itemsep=1em]
+    
+  \item Do simple post-training methods like supervised fine-tuning work to appreciably align a large language model to a set of human values collected from the public? \label{rq1}
+
+    \item What method can be used to evaluate the alignment of a large language model to a set of representatively collected human values, that would remain democratically grounded? \label{rq2}
+    
+\end{enumerate}
+
+These research questions, if addressed, would provide useful insights into the feasibility of aligning large language models to the public in a democratically grounded way. This is of particular importance within the context of Public AI \cite{publicaiPublicAIWhite2024} and Sovereign AI \cite{daleSovereignAI20252025,nfeltSovereignRemediesAI2025} movements that are pushing for more public participation, oversight, and accountability in AI systems.
+
+
+\section{How}
+
+To address these research questions, I will need to carry out a sequence of steps from ingesting a pre-trained model to outputting an aligned model and evaluation results. This will be an end-to-end alignment project. An end-to-end alignment project generally consists of three main steps, with my plan for each step outlined below.
+
+\begin{enumerate}
+  \item \textbf{Defining Alignment Targets:} For pragmatic reasons, I will use existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025} to define a set of human values to align towards. This data will provide me with clusters of human values and allow me to use various types of target structures (Pluralistic, Aggregation, Conglomeration, etc.) to define alignment targets.
+  \item \textbf{Alignment Method:} Recent work \cite{nieSurveytoBehaviorDownstreamAlignment2025} suggests that simple SFT may have appreciable alignment effects. Therefore, I will attempt to use SFT by getting the model to answer the survey questions correctly. If this proves insufficient, I will explore more complex methods such as KTO with binary feedback (correct survey response, incorrect survey response). These methods will be used to align a base LLM to the defined alignment targets from step 1.
+  \item \textbf{Evaluation Method:} To evaluate the success of the alignment, I will need to develop an evaluation method that can measure how well the model is aligned to the defined human values. There will be broadly two tests. One is automated evaluation using held-out survey questions. The other is a public consultation process where I will collect feedback on how much the person (from the various clusters) feels the model acted in alignment with their values. This will require significant design to ensure that the consultation is representative and captures the necessary feedback.
+\end{enumerate}
+
+
+\section{Resources}
+
+\subsection{Timeline}
+
+Figure \ref{fig:timeline} shows the proposed timeline for a 21-week project.
 
 \begin{figure}[h!]
 \centering
@@ -63,26 +90,21 @@ The project will be carried out over three main phases. The first phase will be 
 \end{ganttchart}
 
 \caption{Project timeline in weeks (only roughly aligned to months). This assumes a start time of end of January 2026 with near part time work ramping up to full time work by end of February.}
+\label{fig:timeline}
 \end{figure}
 
-\section{Output}
-
-The output is both qualitative and quantitative in nature. There are four main deliverables:
-
-\begin{itemize}
-    \item A collection of aligned LLMs with various checkpoints of just survey data and then with the collected data.
-    \item A public dataset of collected data around preferred values and responses for alignment.
-    \item Experimental results evaluating the effectiveness of different alignment methods using the collected data.
-\end{itemize}
-
-\section{Resources needed}
-
-There are two resource requirements for this project, hardware and public survey responses.
-
 \subsection{Hardware}
-The first is hardware which will be needed to do the alignment finetuning evaluation of the models. For the base LLM I would want to use a model in the range of 7 billion to 30 billion parameters, as this will get me close to state of the art performance on many tasks. This means that I will need access to about 200GB of GPU memory to be able to finetune the model effectively. Each finetuning run will take in the realm of 3-6 hours depending on the size of the model, amount of data used, alignment methods used and GPU hardware. Therefore given the goal of trying a handful of methods and different value sets I estimate about \footnote{4 hours per fine tune * 3 different methods * 5 different value sets + 5 hours of evaluation = 65 hours} 70 hours of GPU time will be needed. The cost of a GPU hour on a high end GPU such as a B200 is 6 USD per hour which would make the total cost about 420 USD.
-Alternatively the Engineering and Computer Science department's GPU servers should give me access to machines with around 80GB of vram. This would allow me to fine-tune smaller models in the 7-13 billion parameter range. This should still be sufficient for a proof of concept and evaluation of the alignment methods.
 
-\subsubsection{Public consultation responses}
+To train and evaluate the model, hardware will be needed. If I can train models with about 30 billion parameters, I will be able to get near-SOTA performance \footnote{Based on the \href{https://artificialanalysis.ai/leaderboards}{Artificial Analysis leaderboards}: 30B parameters achieve about 60\% of the performance of frontier models.}. Using modern quantization methods \cite{dettmersQLoRAEfficientFinetuning2023,dettmersLLMint88bitMatrix2022} and parameter-efficient fine-tuning methods \cite{huLoRALowRankAdaptation2021,dettmersQLoRAEfficientFinetuning2023}, I should be able to fine-tune these models using around 80GB of VRAM. Therefore, I estimate needing about 240 USD of GPU time to carry out the fine-tuning and evaluation if hardware is rented in the cloud \footnote{Each fine-tuning run will take in the realm of 3--6 hours depending on the size of the model, amount of data used, alignment methods used, and GPU hardware. About 80 hours (5 hours per fine-tune * 3 different methods * 5 different value sets + 5 hours of evaluation) of GPU time will be needed at a cost of 2--3 USD for a single hour on a high-end GPU (e.g. H200) \cite{vastai2026}}. Alternatively the university has some GPU resources that could be used and might be sufficient.
 
-The idea of using the public to help align large language models is central to this project. Most of the fine tuning will be done using the survey data which can be used to get the model roughly aligned to human values. However to get more specific and granular alignment I will collect new data from the public to further refine the model's behavior. This will be in the form of an interactive survey where participants will provide some form of preference feedback on model outputs. I envision using a tool like Polis or similar to collect and aggregate responses in a meaningful way. I would expect to need at least 50 or so people from the various subgroups and for each of them to spend maybe 2-3 15 minutes blocks providing feedback on model outputs.
+\subsection{NZAVS survey data}
+
+The initial alignment target will be defined using existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025}. Through a connection with Dr Knott an application will be put forth to get access to this data. Alternatively if this is not possible the World Values Survey (WVS) \cite{WVS2020} provides similar data and is openly accessible.
+
+\subsection{Public consultation responses}
+
+To create a rigorous evaluation of the alignment process a public consultation process will be needed. This will require recruiting participants from various clusters of the NZ population to provide feedback. I expect the survey to be completed online using some interactive survey tools (e.g Polis \cite{compdemocracyPolis2025} or similar). I would expect to need at least 50 or so people from the various subgroups and for each of them to spend maybe 2-3 15 minutes blocks providing feedback on model outputs.
+
+\section{Ethical considerations}
+
+This project has three main ethical considerations: (i) the use of human survey data (NZAVS/WVS) to construct alignment targets; (ii) interaction with human participants during the public consultation evaluation; and (iii) broader concerns that alignment work may increase model capabilities and enable harmful uses. For survey data, risks will be minimised by following the data custodians' access and usage conditions, namely by only using aggregate-level data. For public consultation, approval will be sought through the relevant university ethics process prior to recruitment and data collection. Finally, to manage dual-use and capability risks, the project will use existing open-weight models (not frontier-scale training) and focus on value alignment rather than capability enhancement.

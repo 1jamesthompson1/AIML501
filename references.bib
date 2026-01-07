@@ -639,6 +639,24 @@
   keywords = {Humans,Personality,PERSONALITY,Personality Disorders,Psychopathology,Social Desirability}
 }
 
+@article{daleSovereignAI20252025,
+  title = {Sovereign {{AI}} in 2025},
+  author = {Dale, Robert},
+  year = 2025,
+  month = sep,
+  journal = {Natural Language Processing},
+  volume = {31},
+  number = {5},
+  pages = {1312--1321},
+  issn = {2977-0424},
+  doi = {10.1017/nlp.2025.10007},
+  urldate = {2026-01-06},
+  abstract = {At the London~Tech~Week event in early June, Nvidia CEO Jensen Huang praised the UK as the `envy of the world' when it comes to AI researchers, but he also criticised it as the largest AI ecosystem in the world without its own infrastructure. The criticism is somewhat self-serving: when the UK does get around to building out that infrastructure, it's certain to consist largely of chips sold by Huang's company. It's also unsurprising: Huang has been pitching the idea of `sovereign AI' since~at~least~2023, conscious that nation states are the next deep pockets to target after the hyperscalers and generously funded model builders. In a world where the only real contenders in the race for AI supremacy are the US and China, we look at how the pursuit of AI sovereignty is playing out across the rest of the planet.},
+  langid = {english},
+  keywords = {AI,sovereignty},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/4MSKZWXK/Dale - 2025 - Sovereign AI in 2025.pdf}
+}
+
 @misc{dalrympleGuaranteedSafeAI2024,
   title = {Towards {{Guaranteed Safe AI}}: {{A Framework}} for {{Ensuring Robust}} and {{Reliable AI Systems}}},
   shorttitle = {Towards {{Guaranteed Safe AI}}},
@@ -655,6 +673,42 @@
   archiveprefix = {arXiv},
   keywords = {Computer Science - Artificial Intelligence},
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/6N67VYJK/Dalrymple et al. - 2024 - Towards Guaranteed Safe AI A Framework for Ensuring Robust and Reliable AI Systems.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/ZAK7A55W/2405.html}
+}
+
+@misc{dettmersLLMint88bitMatrix2022,
+  title = {{{LLM}}.Int8(): 8-Bit {{Matrix Multiplication}} for {{Transformers}} at {{Scale}}},
+  shorttitle = {{{LLM}}.Int8()},
+  author = {Dettmers, Tim and Lewis, Mike and Belkada, Younes and Zettlemoyer, Luke},
+  year = 2022,
+  month = nov,
+  number = {arXiv:2208.07339},
+  eprint = {2208.07339},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2208.07339},
+  urldate = {2026-01-06},
+  abstract = {Large language models have been widely adopted but require significant GPU memory for inference. We develop a procedure for Int8 matrix multiplication for feed-forward and attention projection layers in transformers, which cut the memory needed for inference by half while retaining full precision performance. With our method, a 175B parameter 16/32-bit checkpoint can be loaded, converted to Int8, and used immediately without performance degradation. This is made possible by understanding and working around properties of highly systematic emergent features in transformer language models that dominate attention and transformer predictive performance. To cope with these features, we develop a two-part quantization procedure, LLM.int8(). We first use vector-wise quantization with separate normalization constants for each inner product in the matrix multiplication, to quantize most of the features. However, for the emergent outliers, we also include a new mixed-precision decomposition scheme, which isolates the outlier feature dimensions into a 16-bit matrix multiplication while still more than 99.9\% of values are multiplied in 8-bit. Using LLM.int8(), we show empirically it is possible to perform inference in LLMs with up to 175B parameters without any performance degradation. This result makes such models much more accessible, for example making it possible to use OPT-175B/BLOOM on a single server with consumer GPUs. We open-source our software.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/NBGPH6B3/Dettmers et al. - 2022 - LLM.int8() 8-bit Matrix Multiplication for Transformers at Scale.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/S2MFRZ6Z/2208.html}
+}
+
+@misc{dettmersQLoRAEfficientFinetuning2023,
+  title = {{{QLoRA}}: {{Efficient Finetuning}} of {{Quantized LLMs}}},
+  shorttitle = {{{QLoRA}}},
+  author = {Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  year = 2023,
+  month = may,
+  number = {arXiv:2305.14314},
+  eprint = {2305.14314},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2305.14314},
+  urldate = {2026-01-06},
+  abstract = {We present QLoRA, an efficient finetuning approach that reduces memory usage enough to finetune a 65B parameter model on a single 48GB GPU while preserving full 16-bit finetuning task performance. QLoRA backpropagates gradients through a frozen, 4-bit quantized pretrained language model into Low Rank Adapters\textasciitilde (LoRA). Our best model family, which we name Guanaco, outperforms all previous openly released models on the Vicuna benchmark, reaching 99.3\% of the performance level of ChatGPT while only requiring 24 hours of finetuning on a single GPU. QLoRA introduces a number of innovations to save memory without sacrificing performance: (a) 4-bit NormalFloat (NF4), a new data type that is information theoretically optimal for normally distributed weights (b) double quantization to reduce the average memory footprint by quantizing the quantization constants, and (c) paged optimziers to manage memory spikes. We use QLoRA to finetune more than 1,000 models, providing a detailed analysis of instruction following and chatbot performance across 8 instruction datasets, multiple model types (LLaMA, T5), and model scales that would be infeasible to run with regular finetuning (e.g. 33B and 65B parameter models). Our results show that QLoRA finetuning on a small high-quality dataset leads to state-of-the-art results, even when using smaller models than the previous SoTA. We provide a detailed analysis of chatbot performance based on both human and GPT-4 evaluations showing that GPT-4 evaluations are a cheap and reasonable alternative to human evaluation. Furthermore, we find that current chatbot benchmarks are not trustworthy to accurately evaluate the performance levels of chatbots. A lemon-picked analysis demonstrates where Guanaco fails compared to ChatGPT. We release all of our models and code, including CUDA kernels for 4-bit training.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Machine Learning},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/Y39PHP3D/Dettmers et al. - 2023 - QLoRA Efficient Finetuning of Quantized LLMs.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/7IE6EPTX/2305.html}
 }
 
 @misc{durmusMeasuringRepresentationSubjective2024,
@@ -983,6 +1037,24 @@
   chapter = {Technology},
   langid = {english},
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/FLSYK54E/chatgpt-sets-record-fastest-growing-user-base-analyst-note-2023-02-01.html}
+}
+
+@misc{huLoRALowRankAdaptation2021,
+  title = {{{LoRA}}: {{Low-Rank Adaptation}} of {{Large Language Models}}},
+  shorttitle = {{{LoRA}}},
+  author = {Hu, Edward J. and Shen, Yelong and Wallis, Phillip and {Allen-Zhu}, Zeyuan and Li, Yuanzhi and Wang, Shean and Wang, Lu and Chen, Weizhu},
+  year = 2021,
+  month = oct,
+  number = {arXiv:2106.09685},
+  eprint = {2106.09685},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2106.09685},
+  urldate = {2026-01-06},
+  abstract = {An important paradigm of natural language processing consists of large-scale pre-training on general domain data and adaptation to particular tasks or domains. As we pre-train larger models, full fine-tuning, which retrains all model parameters, becomes less feasible. Using GPT-3 175B as an example -- deploying independent instances of fine-tuned models, each with 175B parameters, is prohibitively expensive. We propose Low-Rank Adaptation, or LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks. Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times. LoRA performs on-par or better than fine-tuning in model quality on RoBERTa, DeBERTa, GPT-2, and GPT-3, despite having fewer trainable parameters, a higher training throughput, and, unlike adapters, no additional inference latency. We also provide an empirical investigation into rank-deficiency in language model adaptation, which sheds light on the efficacy of LoRA. We release a package that facilitates the integration of LoRA with PyTorch models and provide our implementations and model checkpoints for RoBERTa, DeBERTa, and GPT-2 at https://github.com/microsoft/LoRA.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/HADHGKTT/Hu et al. - 2021 - LoRA Low-Rank Adaptation of Large Language Models.pdf;/home/james/snap/zotero-snap/common/Zotero/storage/GT5BDC7P/2106.html}
 }
 
 @book{Hume1739Treatise,
@@ -1417,6 +1489,19 @@
   abstract = {This chapter focuses on the topic of machine learning and introduces the basics of natural language processing, which increasingly uses machine-learning techniques. The link between traditional statistics and machine learning is discussed, and a vocabulary of fundamental machine-learning concepts is introduced. I differentiate between supervised and unsupervised learning methods, and introduce fundamental techniques that are widely used, I introduce Bayes' theorem, which forms the basis of several methods. I discuss methods that apply to sequential data. I discuss the basics of natural language processing (NLP), and consider how it has influenced information retrieval: the challenges in scaling NLP up are also discussed. Some of the problems are intrinsic to the goals of NLP, which tries to do much more with text than information-retrieval methods.},
   isbn = {978-0-12-803130-8},
   keywords = {artificial neural networks,conditional random fields,hidden Markov models,linear regression,logistic regression,Markov chain,N-grams,Naive Bayes,natural language processing,support vector machines}
+}
+
+@misc{nfeltSovereignRemediesAI2025,
+  title = {Sovereign Remedies: {{Between AI}} Autonomy and Control},
+  shorttitle = {Sovereign Remedies},
+  author = {{nfelt}},
+  year = 2025,
+  month = apr,
+  journal = {Atlantic Council},
+  urldate = {2026-01-06},
+  abstract = {Sovereign AI as a phenomenon is going to gain momentum, as national governments find ``wholesale'' AI offerings unsuited to their needs.},
+  langid = {american},
+  file = {/home/james/snap/zotero-snap/common/Zotero/storage/X5DQZAX2/sovereign-remedies-between-ai-autonomy-and-control.html}
 }
 
 @misc{ngoAlignmentProblemDeep2025,
@@ -2062,6 +2147,14 @@
   urldate = {2025-12-22},
   abstract = {Many empirical studies throughout the social and biomedical sciences focus only on very narrow outcomes such as income, or a single specific disease state, or a measure of positive affect. Human well-being or flourishing, however, consists in a much broader range of states and outcomes, certainly including mental and physical health, but also encompassing happiness and life satisfaction, meaning and purpose, character and virtue, and close social relationships. The empirical literature from longitudinal, experimental, and quasiexperimental studies is reviewed in attempt to identify major determinants of human flourishing, broadly conceived. Measures of human flourishing are proposed. Discussion is given to the implications of a broader conception of human flourishing, and of the research reviewed, for policy, and for future research in the biomedical and social sciences.},
   file = {/home/james/snap/zotero-snap/common/Zotero/storage/SEFUBH5S/VanderWeele - 2017 - On the promotion of human flourishing.pdf}
+}
+
+@misc{vastai2026,
+  title = {Vast.Ai -- Affordable {{GPU}} Cloud Marketplace},
+  author = {{Vast.ai, Inc.}},
+  year = 2026,
+  urldate = {2026-01-07},
+  howpublished = {https://cloud.vast.ai/}
 }
 
 @misc{vaswaniAttentionAllYou2017,
