@@ -1,17 +1,4 @@
-\section{Why}
-
-Current methods for training large language models involve scraping the internet for large amounts of text data, creating powerful next-token prediction models. To turn these into something useful for end users (e.g. chatbots or assistants), the model is then aligned to behave in desired ways, typically by contracting human labelers/annotators/demonstrators to provide training data. This has made modern LLMs highly useful.
-Problematically, current alignment methods are opaque and the alignment target is often specified privately by a small set of individuals (e.g. the people writing instructions for annotators). This requires trust from the public that the model is aligned with their values. Even if the values of the creators were initially acceptable, they are usually set within for-profit organizations with incentives that can distort alignment (e.g. maximizing engagement or revenue). Therefore we cannot assume these models are aligned to the public good.
-
-There are multiple challenges, however, with aligning models to the public good, or more formally maximizing median human flourishing.
-First is how to define what the public good is, that is what would the alignment target even look like? Avenues to explore are; lists of principles (like constitutional AI \cite{baiConstitutionalAIHarmlessness2022}), value sets from a taxonomy of human values \cite{schwartzUniversalsContentStructure1992,rokeachNatureHumanValues1973}, fine grained "preference datasets" (like that collected for RLHF \cite{ouyangTrainingLanguageModels2022} or similar), or more complex structures like Moral graphs \cite{klingefjordWhatAreHuman2024}.
-Second is that even if we understood what an alignment target should look like, it is non-obvious how to collect data that represents it in a way that is representative of the public.
-Third is that once this alignment structure is defined and data collected to turn it into a valid instance of an alignment target it is an open question how best to align a subsequent model towards this target. This becomes particularly challenging given that the alignment target could be a pluralistic target and thus require fair distinct treatment of different subgroups.
-Finally, even if we had a method to align a model to this target, it is unclear how we would evaluate success. Current methods are generally short term and often take the form of pairwise comparisons or held-out test sets of expected responses. Notably, they do not usually provide out-of-distribution evaluation or capture multi-step interactions and downstream outcomes, and they are often designed and performed by the same select few individuals who designed the alignment target in the first place.
-
-As AI moves towards more general capabilities and is deployed in more powerful and high-stake settings, the lack of democratic ideals within the full stack of AI development becomes increasingly apparent. Significant work is needed to develop methods that allow us to create AI systems by the public (participation) and for the public (accountability, transparency).
-
-\section{What}
+\section{Research aims and questions}
 
 The goal of this project is to address some gaps in the current AI alignment landscape by a proof-of-concept end-to-end project. It will attempt to align a large language model to a set of human values collected from the public and to develop an evaluation method that can better measure alignment success on these values. Specifically, the project will set out to answer a series of research questions.
 
@@ -26,7 +13,7 @@ The goal of this project is to address some gaps in the current AI alignment lan
 These research questions, if addressed, would provide useful insights into the feasibility of aligning large language models to the public in a democratically grounded way. This is of particular importance within the context of Public AI \cite{publicaiPublicAIWhite2024} and Sovereign AI \cite{daleSovereignAI20252025,nfeltSovereignRemediesAI2025} movements that are pushing for more public participation, oversight, and accountability in AI systems.
 
 
-\section{How}
+\section{Alignment methodology and evaluation plan}
 
 To address these research questions, I will need to carry out a sequence of steps from ingesting a pre-trained model to outputting an aligned model and evaluation results. This will be an end-to-end alignment project. An end-to-end alignment project generally consists of three main steps, with my plan for each step outlined below.
 
@@ -36,10 +23,23 @@ To address these research questions, I will need to carry out a sequence of step
   \item \textbf{Evaluation Method:} To evaluate the success of the alignment, I will need to develop an evaluation method that can measure how well the model is aligned to the defined human values. There will be broadly two tests. One is automated evaluation using held-out survey questions. The other is a public consultation process where I will collect feedback on how much the person (from the various clusters) feels the model acted in alignment with their values. This will require significant design to ensure that the consultation is representative and captures the necessary feedback.
 \end{enumerate}
 
+\section{Problems with current LLM alignment}
 
-\section{Resources}
+Current methods for training large language models involve scraping the Internet for large amounts of text data, creating powerful next-token prediction models. To turn these into something useful for end users (e.g. chatbots or assistants), the model is then aligned to behave in desired ways, typically by contracting human labelers/annotators/demonstrators to provide training data. This has made modern LLMs highly useful.
+Problematically, current alignment methods are opaque and the alignment target is often specified privately by a small set of individuals (e.g. the people writing instructions for annotators). This requires trust from the public that the model is aligned with their values. Even if the values of the creators were initially acceptable, they are usually set within for-profit organizations with incentives that can distort alignment (e.g. maximizing engagement or revenue). Therefore we cannot assume these models are aligned to the public good.
 
-\subsection{Timeline}
+There are multiple challenges, however, with aligning models to the public good, or more formally maximizing median human flourishing.
+First is how to define what the public good is, that is what would the alignment target even look like? Avenues to explore are; lists of principles (like constitutional AI \cite{baiConstitutionalAIHarmlessness2022}), value sets from a taxonomy of human values \cite{schwartzUniversalsContentStructure1992,rokeachNatureHumanValues1973}, fine grained "preference datasets" (like that collected for RLHF \cite{ouyangTrainingLanguageModels2022} or similar), or more complex structures like Moral graphs \cite{klingefjordWhatAreHuman2024}.
+Second is that even if we understood what an alignment target should look like, it is non-obvious how to collect data that represents it in a way that is representative of the public.
+Third is that once this alignment structure is defined and data collected to turn it into a valid instance of an alignment target it is an open question how best to align a subsequent model towards this target. This becomes particularly challenging given that the alignment target could be a pluralistic target and thus require fair distinct treatment of different subgroups.
+Finally, even if we had a method to align a model to this target, it is unclear how we would evaluate success. Current methods are generally short term and often take the form of pairwise comparisons or held-out test sets of expected responses. Notably, they do not usually provide out-of-distribution evaluation or capture multi-step interactions and downstream outcomes, and they are often designed and performed by the same select few individuals who designed the alignment target in the first place.
+
+As AI moves towards more general capabilities and is deployed in more powerful and high-stake settings, the lack of democratic ideals within the full stack of AI development becomes increasingly apparent. Significant work is needed to develop methods that allow us to create AI systems by the public (participation) and for the public (accountability, transparency).
+
+
+\section{Resources and feasibility}
+
+\subsection{Proposed timeline}
 
 Figure \ref{fig:timeline} shows the proposed timeline for a 21-week project.
 
@@ -93,11 +93,11 @@ Figure \ref{fig:timeline} shows the proposed timeline for a 21-week project.
 \label{fig:timeline}
 \end{figure}
 
-\subsection{Hardware}
+\subsection{Computational resources}
 
 To train and evaluate the model, hardware will be needed. If I can train models with about 30 billion parameters, I will be able to get near-SOTA performance \footnote{Based on the \href{https://artificialanalysis.ai/leaderboards}{Artificial Analysis leaderboards}: 30B parameters achieve about 60\% of the performance of frontier models.}. Using modern quantization methods \cite{dettmersQLoRAEfficientFinetuning2023,dettmersLLMint88bitMatrix2022} and parameter-efficient fine-tuning methods \cite{huLoRALowRankAdaptation2021,dettmersQLoRAEfficientFinetuning2023}, I should be able to fine-tune these models using around 80GB of VRAM. Therefore, I estimate needing about 240 USD of GPU time to carry out the fine-tuning and evaluation if hardware is rented in the cloud \footnote{Each fine-tuning run will take in the realm of 3--6 hours depending on the size of the model, amount of data used, alignment methods used, and GPU hardware. About 80 hours (5 hours per fine-tune * 3 different methods * 5 different value sets + 5 hours of evaluation) of GPU time will be needed at a cost of 2--3 USD for a single hour on a high-end GPU (e.g. H200) \cite{vastai2026}}. Alternatively the university has some GPU resources that could be used and might be sufficient.
 
-\subsection{NZAVS survey data}
+\subsection{Survey data}
 
 The initial alignment target will be defined using existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025}. Through a connection with Dr Knott an application will be put forth to get access to this data. Alternatively if this is not possible the World Values Survey (WVS) \cite{WVS2020} provides similar data and is openly accessible.
 
