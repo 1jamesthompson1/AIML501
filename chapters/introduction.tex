@@ -1,4 +1,8 @@
-Globally, groups are building increasingly powerful AI systems. These systems are becoming embedded into many aspects of our lives and society and, notably, are operating with more autonomy than previous technologies. Large language models (LLMs) are a class of AI systems that have shown remarkable capabilities in understanding and generating natural language and, more recently, audio and visual content. With these advanced capabilities, LLMs are being used to act both on our behalf and alongside us. The application of these systems motivates alignment between the systems and how we would want them to behave.
+\section{Motivation}
+
+Globally, groups are building increasingly powerful AI systems. These systems are becoming embedded into many aspects of our lives and society and, notably, are operating with more autonomy than previous technologies. Large language models (LLMs) are a class of AI systems that have shown remarkable capabilities in understanding and generating natural language and, more recently, audio and visual content. With these advanced capabilities, LLMs are being used to act both on our behalf and alongside us. The application of these systems motivates alignment between the systems and how we would want them to behave. Given the early stages of AI development and its impact effective action and direction now could have outsized downstream effects.
+
+\section{The Alignment Problem}
 
 AI alignment is the field of study and practice that focuses on ensuring that AI systems' goals and behaviors are in line with what designers and end users intend. The field itself is relatively new, but draws on older ideas from control theory, ethics, policy, and governance. Given that the most capable AI systems today are LLMs, this essay focuses on the alignment of LLMs specifically.
 
@@ -8,6 +12,12 @@ Various methods have been proposed and implemented to help align LLMs to better 
 
 In production, the effective alignment target can often be described as whatever best serves the deploying organization's objectives (e.g., growth, retention, revenue). This is often at odds with end users' intentions and values. This motivates defining the alignment target so that it reflects the values of the broader public. In addition, institutional incentives and deployment contexts can partially determine how aligned systems behave in practice, which suggests that model-level alignment alone may be insufficient. This in turn raises practical challenges in defining public values and in balancing them when they conflict.
 
-In this report, I provide a background study of large language models, current alignment methods, and concepts for understanding and defining public values. I also provide a desiderata for AI and an overview of key problems in the broader field of AI safety. Finally, I propose a project to research and implement a method to align LLMs to public values and to develop strong evaluation methods to measure the success of alignment.
+\section{Report Overview}
 
-Given the early stage of AI deployment, design and governance choices made now may have outsized downstream effects. This parallels concerns about the modern internet, where dominant monetization incentives can conflict with the public good and little design and governance choices were made early on. If future AI systems become commonplace in roles such as legal advice, medicine, or skilled trades, it will matter what values and constraints they ultimately reflect.
+\subsection*{Chapter 2: Background Study}
+
+In this chapter I provide a comprehensive background study covering large language models, technical LLM alignment, AI safety, human values and a desiderata for AI. This provides the context for what is currently known in the field, what is wrong and how we might move towards a better situation.
+
+\subsection*{Chapter 3: Proposed Project}
+
+Here I will propose a project to research and implement a method to align LLMs to public values and provide a strong democratically grounded evaluation methods to measure the success of alignment. This fills the gap between current alignment methods and the need for scalable, democratically grounded alignment techniques.
