@@ -1,29 +1,92 @@
 \section{Research aims and questions}
 
-The goal of this project is to address some gaps in the current AI alignment landscape by a proof-of-concept end-to-end project. It will attempt to align a large language model to a set of human values collected from the public and to develop an evaluation method that can better measure alignment success on these values. Specifically, the project will set out to answer a series of research questions.
+The goal of this project is to address some gaps in the current AI alignment landscape by a proof-of-concept end-to-end project. It will attempt to align a large language model to a set of human values collected from the public and to develop an evaluation method that can better measure alignment success on these values. To do this I will use value survey data to do alignment training and evaluate using behavioral assessments of the LLM by the public. Specifically, the project will set out to answer a series of research questions.
 
 \begin{enumerate}[label=\textbf{RQ\arabic*:}, ref=RQ\arabic*, leftmargin=*, itemsep=1em]
-    
-  \item Do simple post-training methods like supervised fine-tuning work to appreciably align a large language model to a set of human values collected from the public? \label{rq1}
+  \item \textbf{Alignment feasibility.} Do simple post-training methods like supervised fine-tuning work to appreciably align a large language model to a set of human values collected from the public? \label{rq1}
 
-    \item What method can be used to evaluate the alignment of a large language model to a set of representatively collected human values, that would remain democratically grounded? \label{rq2}
-    
+  \item \textbf{Evaluation.} What method can be used to evaluate the alignment of a large language model to a set of representatively collected human values, in a way that remains democratically grounded? \label{rq2}
 \end{enumerate}
 
-These research questions, if addressed, would provide useful insights into the feasibility of aligning large language models to the public in a democratically grounded way. This is of particular importance within the context of Public AI \cite{publicaiPublicAIWhite2024} and Sovereign AI \cite{daleSovereignAI20252025,nfeltSovereignRemediesAI2025} movements that are pushing for more public participation, oversight, and accountability in AI systems.
+These research questions, if addressed, would provide useful insights into the feasibility of aligning large language models to the public in a democratically grounded way. This is of particular importance within the context of Public, Sovereign and Democratic AI \cite{daleSovereignAI20252025,nfeltSovereignRemediesAI2025,publicaiPublicAIWhite2024,ovadyaDemocraticAIPossible2025} movements that are pushing for more public participation, oversight, and accountability in AI systems.
 
 
 \section{Alignment methodology and evaluation plan}
 
-To address these research questions, I will need to carry out a sequence of steps from ingesting a pre-trained model to outputting an aligned model and evaluation results. This will be an end-to-end alignment project. An end-to-end alignment project generally consists of three main steps, with my plan for each step outlined below.
+To address these research questions, I will need to carry out a sequence of steps from ingesting a pre-trained model to outputting an aligned model and evaluation results. An end-to-end alignment procedure generally consists of three main steps, with my plan for each step outlined below.
 
-\begin{enumerate}
-  \item \textbf{Defining Alignment Targets:} For pragmatic reasons, I will use existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025} to define a set of human values to align towards. This data will provide me with clusters of human values and allow me to use various types of target structures (Pluralistic, Aggregation, Conglomeration, etc.) to define alignment targets.
-  \item \textbf{Alignment Method:} Recent work \cite{nieSurveytoBehaviorDownstreamAlignment2025} suggests that simple SFT may have appreciable alignment effects. Therefore, I will attempt to use SFT by getting the model to answer the survey questions correctly. If this proves insufficient, I will explore more complex methods such as KTO with binary feedback (correct survey response, incorrect survey response). These methods will be used to align a base LLM to the defined alignment targets from step 1.
-  \item \textbf{Evaluation Method:} To evaluate the success of the alignment, I will need to develop an evaluation method that can measure how well the model is aligned to the defined human values. There will be broadly two tests. One is automated evaluation using held-out survey questions. The other is a public consultation process where I will collect feedback on how much the person (from the various clusters) feels the model acted in alignment with their values. This will require significant design to ensure that the consultation is representative and captures the necessary feedback.
-\end{enumerate}
+\subsection{Defining the alignment target}
 
-\section{Problems with current LLM alignment}
+For pragmatic reasons, I will use existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025} to define a set of human values to align towards. This data will provide me with clusters of human values and allow me to use various types of target structures to define alignment targets.
+
+I will define two sorts of alignment targets. The first will be a set of global values that represent the values of the population as a whole, this can be derived by taking the mode of the entire response along with a variation metric. The second will be pluralistic targets that get defined as the mode response within each cluster of respondents (n $\approx$ 5). This will allow me to explore the differences between different value alignment targets.
+
+The definitions of these clusters is important and will be done in one of two ways. Firstly I could use existing clusters of respondents that have been defined in prior work (prior work yet unfound). Alternatively, I will perform our own clustering of respondents in the value space by turning each respondent's answers into a vector and using dimension reduction followed by clustering algorithms (e.g. k-means, hierarchical clustering, etc.) to define groups of similar respondents.
+
+\subsection{Aligning to the targets}
+
+Recent work \cite{nieSurveytoBehaviorDownstreamAlignment2025} suggests that simple SFT may have appreciable alignment effects. Therefore, I will attempt to use SFT by getting the model to answer the survey questions correctly, in Figure \ref{fig:nzavs-simple-sft} one can see the basic outline. If this proves insufficient, I will explore more complex methods such as KTO with binary feedback (correct survey response, incorrect survey response). These methods will be used to align a base LLM to the defined alignment targets from step 1.
+
+Given there are only about 250 survey questions, I will need to augment the data to ensure their are enough training examples. I will do this by using different templates that pose the same question in different ways. Importantly the actual content of the question will remain the same, only the system prompt and structure of getting the LLM to answer will change. By having a set of different templates it is plausible that the 250 initial questions can be augmented to create a training set of about 1500 examples.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    every node/.style={draw, rounded corners, align=left, font=\small},
+    node distance=1.4cm,
+    arrow/.style={->, thick}
+]
+
+\node (prompt) {
+\textbf{Model input (Prompt)}\\[2pt]
+Instructions: Please indicate how strongly you disagree or agree with each statement,\\ from 1 (strongly disagree) to 7 (strongly agree)\\
+Statement:\\``The New Zealand Police care about the well-being of everyone they deal with.''};
+
+\node (model) [below=0.3cm of prompt] {
+\textbf{Large Language Model}
+};
+
+\node (output) [below of= model] {
+\textbf{Model output}\\[2pt]
+6
+};
+
+\node (real) [right=1cm of output] {
+\textbf{True response}\\[2pt]
+7
+};
+
+\node (feedback) [below=1cm of output] {
+Loss = $\mathcal{L}(pred, real)$
+};
+
+\draw[arrow] (prompt) -- (model);
+\draw[arrow] (model) -- (output);
+\draw[arrow] (output) -- (feedback);
+\draw[arrow] (real) -- (feedback);
+\draw[arrow, dashed] 
+    (feedback.west) 
+    to[bend left=25] 
+    node[left, font=\small]{Update model to increase the\\ likelihood of generating true response}
+    (model.west);
+
+\end{tikzpicture}
+\caption{Simplified illustrative example using NZAVS survey data. The model is prompted with a survey question, produces a Likert-scale response, and receives a supervision signal based on its distance from the observed NZAVS response.}
+\label{fig:nzavs-simple-sft}
+
+\end{figure}
+
+\subsection{Evaluating the success of the alignment}
+
+To evaluate the success of the alignment, I will need to develop an evaluation method that can measure how well the model is aligned to the defined human values. There will be broadly two tests. One is automated evaluation using held-out survey questions. The other is a public consultation process where I will collect feedback on how much the person (from the various clusters) feels the model acted in alignment with their values. This will require significant design to ensure that the consultation is representative and captures the necessary feedback.
+
+The first evaluation method will involve holding out a set of survey questions from the training data. It will not be randomly choosen test yet, but instead designed to test robustness to template changes and question paraphrases. I will create multiple different templates and one of these can be held out for evaluation. The question paraphrases are already available in the survey questions as some questions ask the same thing in different ways.
+
+The second evaluation method will involve getting the model to engage in various simulations of real world tasks. Then I will recruit participants from the various clusters defined in step 1 to rank which model actions best align with their values in these scenarios. This will provide a human-grounded evaluation of alignment success. To recruit participants from with the cluster I will either use the methods supplied by the NZAVS clusters or if defining my own clusters I will recruit a representative sample and put them in clusters based off of screening questions that match the cluster definitions.
+
+These evaluations combined will provide a robust measure of how well the model has understood the human values as well as how it actually affects its behavior in more realistic settings.
+
+\section{Why this is important}
 
 Current methods for training large language models involve scraping the Internet for large amounts of text data, creating powerful next-token prediction models. To turn these into something useful for end users (e.g. chatbots or assistants), the model is then aligned to behave in desired ways, typically by contracting human labelers/annotators/demonstrators to provide training data. This has made modern LLMs highly useful.
 Problematically, current alignment methods are opaque and the alignment target is often specified privately by a small set of individuals (e.g. the people writing instructions for annotators). This requires trust from the public that the model is aligned with their values. Even if the values of the creators were initially acceptable, they are usually set within for-profit organizations with incentives that can distort alignment (e.g. maximizing engagement or revenue). Therefore we cannot assume these models are aligned to the public good.
@@ -36,6 +99,16 @@ Finally, even if we had a method to align a model to this target, it is unclear 
 
 As AI moves towards more general capabilities and is deployed in more powerful and high-stake settings, the lack of democratic ideals within the full stack of AI development becomes increasingly apparent. Significant work is needed to develop methods that allow us to create AI systems by the public (participation) and for the public (accountability, transparency).
 
+\section{Contributions}
+
+The project overall will contribute by providing a proof-of-concept alignment procedure to the NZ public. Within that it will contribute:
+\begin{itemize}
+  \item A method to define alignment targets and a training dataset from survey data that captures pluralistic human values in a democratically defensible manner.
+  \item A novel [application of]\footnote{Unsure if creating my own or using someone else's dataset} evaluation dataset to test a models behavior in realistic scenarios to be judged by human participants from various value clusters.
+  \item A demonstration of a lightweight training procedure on open weight LLMs that has democratically fair evaluation across different sub groups.\footnote{Important to note I don't know how successful this will be yet. Ideally I could say that it achieves high alignment scores but this is unknown at this stage.}
+\end{itemize}
+
+\noindent All of the work will be open-sourced, documented and freely available.
 
 \section{Resources and feasibility}
 
@@ -95,11 +168,11 @@ Figure \ref{fig:timeline} shows the proposed timeline for a 21-week project.
 
 \subsection{Computational resources}
 
-To train and evaluate the model, hardware will be needed. If I can train models with about 30 billion parameters, I will be able to get near-SOTA performance \footnote{Based on the \href{https://artificialanalysis.ai/leaderboards}{Artificial Analysis leaderboards}: 30B parameters achieve about 60\% of the performance of frontier models.}. Using modern quantization methods \cite{dettmersQLoRAEfficientFinetuning2023,dettmersLLMint88bitMatrix2022} and parameter-efficient fine-tuning methods \cite{huLoRALowRankAdaptation2021,dettmersQLoRAEfficientFinetuning2023}, I should be able to fine-tune these models using around 80GB of VRAM. Therefore, I estimate needing about 240 USD of GPU time to carry out the fine-tuning and evaluation if hardware is rented in the cloud \footnote{Each fine-tuning run will take in the realm of 3--6 hours depending on the size of the model, amount of data used, alignment methods used, and GPU hardware. About 80 hours (5 hours per fine-tune * 3 different methods * 5 different value sets + 5 hours of evaluation) of GPU time will be needed at a cost of 2--3 USD for a single hour on a high-end GPU (e.g. H200) \cite{vastai2026}}. Alternatively the university has some GPU resources that could be used and might be sufficient.
+To train and evaluate the model, hardware will be needed. If I can train models with about 30 billion parameters, I will be able to get near-SOTA performance \footnote{Based on the \href{https://artificialanalysis.ai/leaderboards}{Artificial Analysis leaderboards}: 30B parameters achieve about 60\% of the performance of frontier models.}. Using modern quantization methods \cite{dettmersQLoRAEfficientFinetuning2023,dettmersLLMint88bitMatrix2022} and parameter-efficient fine-tuning methods \cite{huLoRALowRankAdaptation2021,dettmersQLoRAEfficientFinetuning2023}, I should be able to fine-tune these models using around 80GB of VRAM (h100, h200 etc). Therefore, I estimate needing about 240 USD of GPU time to carry out the fine-tuning and evaluation if hardware is rented in the cloud \footnote{Each fine-tuning run will take in the realm of 3--6 hours depending on the size of the model, amount of data used, alignment methods used, and GPU hardware. About 80 hours (5 hours per fine-tune * 3 different methods * 5 different value sets + 5 hours of evaluation) of GPU time will be needed at a cost of 2--3 USD for a single hour on a high-end GPU (e.g. H200) \cite{vastai2026}}. Alternatively the university has some GPU resources that could be used and might be sufficient.
 
 \subsection{Survey data}
 
-The initial alignment target will be defined using existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025}. Through a connection with Dr Knott an application will be put forth to get access to this data. Alternatively if this is not possible the World Values Survey (WVS) \cite{WVS2020} provides similar data and is openly accessible.
+The initial alignment target will be defined using existing survey data from the New Zealand Attitudes and Values Survey (NZAVS) \cite{NZAVS2025} with about 30,000 respondents in recent surveys. A formal application is being put forth to get access to their data. Alternatively if this is not possible the World Values Survey (WVS) \cite{WVS2020} provides similar data (albeit only 1,000 respondents) and is openly accessible.
 
 \subsection{Public consultation responses}
 
@@ -107,4 +180,13 @@ To create a rigorous evaluation of the alignment process a public consultation p
 
 \section{Ethical considerations}
 
-This project has three main ethical considerations: (i) the use of human survey data (NZAVS/WVS) to construct alignment targets; (ii) interaction with human participants during the public consultation evaluation; and (iii) broader concerns that alignment work may increase model capabilities and enable harmful uses. For survey data, risks will be minimised by following the data custodians' access and usage conditions, namely by only using aggregate-level data. For public consultation, approval will be sought through the relevant university ethics process prior to recruitment and data collection. Finally, to manage dual-use and capability risks, the project will use existing open-weight models (not frontier-scale training) and focus on value alignment rather than capability enhancement.
+The interaction of this project with human data and human participants raises ethical concerns. Furthermore as AI has the potential for strong negative real-world impact there are considerations around development and training of these models.
+
+\begin{itemize}
+  \item The use of human survey data (NZAVS/WVS) to construct alignment targets. \\
+  \textit{mitigation:} Only aggregate-level data will be used, and all data custodians' access and usage conditions will be followed.
+  \item Interaction with human participants during the public consultation evaluation.\\
+  \textit{mitigation:} Ethics approval will be sought prior to recruitment, and informed consent will be obtained from all participants.
+  \item Concerns of dual-use and capability increases from alignment work. \\
+  \textit{mitigation:} The project will use existing open-weight models (not frontier-scale training) and focus on value alignment rather than capability enhancement. Concerns of emergent misalignment will be addressed by only training to ever do \scare{positive} things.
+\end{itemize}
