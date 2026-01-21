@@ -1,12 +1,14 @@
 \section{Motivation}
 
-Globally, groups are building increasingly powerful AI systems. These systems are becoming embedded into many aspects of our lives and society and, notably, are operating with more autonomy than previous technologies. Large language models (LLMs) are a class of AI systems that have shown remarkable capabilities in understanding and generating natural language and, more recently, audio and visual content. With these advanced capabilities, LLMs are being used to act both on our behalf and alongside us. The application of these systems motivates alignment between the systems and how we would want them to behave. Given the early stages of AI development and its impact effective action and direction now could have outsized downstream effects.
+Globally, groups are building increasingly powerful AI systems. These systems are becoming embedded into many aspects of our lives and society and, notably, are operating with more autonomy than previous technologies. \term{Large Language Models} (\term{LLMs}) are a class of AI systems that have shown remarkable capabilities in understanding and generating natural language and, more recently, audio and visual content. With these advanced capabilities, LLMs are being used to act both on our behalf and alongside us. The application of these systems motivates alignment between the systems and how we would want them to behave. Given the early stages of AI development and its impact effective action and direction now could have outsized downstream effects.
+
+In this report, I explore what LLMs are, how we align them and the flaws of current methods. I argue that current alignment methods lack democratically grounded processes and instead have perverse incentives that make alignment with public values/good unrealistic. I provide a project proposal to research and implement a method to align LLMs to public values and evaluate the success of this alignment in a way that is democratically grounded, transparent and fair.
 
 \section{The Alignment Problem}
 
-\textbf{AI alignment} is the field of study and practice that focuses on ensuring that AI systems' goals and behaviors are in line with what designers and end users intend. The field itself is relatively new, but draws on older ideas from control theory, ethics, policy, and governance. Given that the most capable AI systems today are LLMs, this essay focuses on the alignment of LLMs specifically.
+\term{AI alignment} is the field of study and practice that focuses on ensuring that AI systems' goals and behaviors are in line with what designers and end users intend. The field itself is relatively new, but draws on older ideas from control theory, ethics, policy, and governance. Given that the most capable AI systems today are LLMs, this essay focuses on the alignment of LLMs specifically.
 
-LLMs are typically trained on vast amounts of text data using a \textbf{self-supervised learning} approach where they learn to predict the next word in a sentence. LLM alignment generally refers to the process of \textbf{fine-tuning} these pre-trained models to ensure that their outputs are not just coherent and contextually relevant, but also consistent with what users (and society) would want. For example, a counselling assistant that prioritises immediate user approval could validate harmful rationalizations (e.g., minimizing alcohol dependence) rather than supporting long-term wellbeing. This illustrates a common failure mode where apparent helpfulness and agreement (\textbf{sycophancy}) can conflict with users' considered interests and broader social goals.
+LLMs are typically trained on vast amounts of text data using a \term{self-supervised learning} approach where they learn to predict the next word in a sentence. LLM alignment generally refers to the process of \term{fine-tuning} these pre-trained models to ensure that their outputs are not just coherent and contextually relevant, but also consistent with what users (and society) would want. For example, a counselling assistant that prioritises immediate user approval could validate harmful rationalizations (e.g., minimizing alcohol dependence) rather than supporting long-term wellbeing. This illustrates a common failure mode where apparent helpfulness and agreement (\term{sycophancy}) can conflict with users' considered interests and broader social goals.
 
 Various methods have been proposed and implemented to help align LLMs to better match user intentions and values. These methods generally involve generating a response to a prompt and then using a feedback mechanism to adjust the model's parameters based on how well the response aligns with desired outcomes. These methods are often evaluated using short-term metrics (e.g., whether a response is preferred in isolation), which can ignore downstream and longer-horizon impacts of model behavior. A key underlying problem is defining the "alignment target" itself. In research, this target is often specified in an ad hoc manner (e.g., helpfulness, honesty) to demonstrate the effectiveness of a particular alignment method. In practice, however, alignment targets are more complex and multi-dimensional.
 
@@ -14,9 +16,11 @@ In production, the effective alignment target can often be described as whatever
 
 \section{Report Overview}
 
+This report is structured as two chapters. Chapter 2 is a literature review and background study and Chapter 3 is a complete project proposal.
+
 \subsection*{Chapter 2: Background Study}
 
-In this chapter I provide a comprehensive background study covering large language models, technical LLM alignment, AI safety, human values and a desiderata for AI. This provides the context for what is currently known in the field, what is wrong and how we might move towards a better situation.
+In this chapter I provide a comprehensive background study covering LLMs, technical LLM alignment, AI safety, human values and a desiderata for AI. This provides the context for what is currently known in the field, what is wrong and how we might move towards a better future.
 
 \subsection*{Chapter 3: Proposed Project}
 
