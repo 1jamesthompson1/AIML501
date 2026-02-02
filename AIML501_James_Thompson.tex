@@ -18,6 +18,7 @@
 % \pgfplotsset{compat=1.18}
 
 \usepackage{amsmath}
+\usepackage{amssymb}
 \newtheorem{definition}{Definition}
 \usepackage{hyperref}
 \usepackage{microtype}
@@ -118,13 +119,23 @@
 \chapter{Alignment of Large Language Models, and its moral and political context}
 \input{chapters/background.tex}
 
-\chapter{Proposal: Aligning Large Language Models to Publicly Collected Human Values}
-\input{chapters/proposal.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \backmatter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\bibliographystyle{ieeetr}
 \printbibliography
+
+% appendix
+\appendix
+
+%TC:ignore
+\chapter{Related ideas}
+\input{appendices/related ideas.tex}
+
+\chapter{Proposal: Aligning Large Language Models to Publicly Collected Human Values}
+\input{appendices/proposal.tex}
+
+%TC:endignore
 
 \end{document}
