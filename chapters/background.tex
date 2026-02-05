@@ -440,29 +440,13 @@ Many of these failure modes can be addressed through careful design however they
 \section{Methods for collecting and understanding human values}
 \label{sec:values}
 
-As discussed in \ref{sec:alignment} true values are latent objects that we can only probe through behavior and preferences. Therefore to align LLMs to human values we first need to have the best chance at undersatnding and accurately representing the values of humans. If done correctly then we can use these representations to align LLMs to human values. In this section I will talk about the different types of value signals (implicit vs explicit) and ways that we can collect these different signals.
-
-todo
-Add something that mentions how values are only weightsi na amodel.
-
-
-As discussed in the previous sections it is paramount that we make sure that LLMs are aligned to human values. One can understand values in two different ways. It can be through broad principles and value statements that gets applied to specific situations or alternatively one can have lots of examples of behaviors/preferences and understands what the values are. Interestingly when working with humans we can only provide principles and let them infer the details, yet with modern AI systems like LLMs we can provide lots of specific examples and let it infer the values from this \footnote{Providing a human with 10,000 different questions and responses of "how to answer the phone" won't provide much clarity, yet giving them some simple high level rules is quite effective. Oppositely for AI most alignment methods like RLHF, DPO etc provide lots of specific examples and let the model infer the underlying values.}. In this section I will discuss traditional human value taxonomies, way to collect and measure human values and how values interact with behavior.
+As discussed in \ref{sec:alignment} true values are latent objects that we can only probe through behavior and preferences. Therefore to align LLMs to human values we first need to have the best chance at understanding and accurately representing the values of humans. If done correctly then we can use these representations to align LLMs to human values. In this section I will talk about the different types of value signals (implicit vs explicit) and ways that we can collect these different signals.
 
 \subsection{Explicit vs implicit values}
 
 There are two broad ways to understand human values. One is through explicit statements of values and principles. These are the form of \enquote{I value people having the freedom to express themselves} \footnote{As discussed in \cite{klingefjordWhatAreHuman2024} a common pitfall of these explicit values is that they are too vague and aspirational and so can't be operationalized well.}. The other way is through implicit values that are inferred from behavior and preferences. These are of the form \enquote{I helped this charity because I thought it was more important than this other charity} or \enquote{[Person A] fired [Person B] because they were not performing well, it was costing the company too much.}.
 
 When working with humans we use both explicit and implicit values to align them to our interests. For example when teaching our kids we use explicit statements of values \enquote{Pay your debts before buying something new} yet crucially it is the examples of when we pay our debts first that teach them the value effectively. Given the scale and capabilities of LLMs we can explicitly tell it what to do however we can also provide it with many examples of behavior and preferences that imply certain values.
-
-
-\subsection{Explicit human values taxonomies}
-todo remove
-
-Human values are an old idea that go back millennia \cite{aristotleAristotlesNicomacheanEthics350B.C.E,mullerLawsManu1886,amesAnalectsConfuciusPhilosophical1998}, with each culture having its own set of values that are important to them. They define how people should be and act \footnote{Although the actual definition of values is up for contention, this simple version can suffice for our purposes}. In modern times we have developed various taxonomies of humans values that allow us to understand and categorize different sets of values.
-
-A widely cited modern value taxonomy is Rokeach's book "The Nature of Human Values" \cite{rokeachNatureHumanValues1973} where he posits that humans values can be understood as 36 distinct values. Rokeach groups the values as either \term{terminal values} which are desirable end-states (freedom, equality...) and \term{instrumental values} which are preferable modes of behavior (honesty, kindness...). Expanding on this idea of value taxonomy Schwartz \cite{schwartzUniversalsContentStructure1992} proposes a model of 10 broad human values that he later expands to 19 values \cite{schwartzRefiningTheoryBasic2012}. Schwartz's organises the values in a circumplex structure where one dimensions is self-enhancement vs self-transcendence and the other is openness to change vs conservation.
-
-These taxonomies provide a useful framework for understanding human values and how they relate to each other. Importantly they are trying to provide the most predictive ability of peoples actions given the least number of values. This trade off between complexity and predictive power is important when trying to represent human values in AI systems. Contemporary work from computer scientists have created value taxonomies that are designed specifically for their predictive \footnote{Which in this case is the ability for a model to predict someones values (from the taxonomy) given an argument that they made. Plausibly the word modelling power might be more intuitive.} power \cite{kieselIdentifyingHumanValues2022,klingefjordWhatAreHuman2024}. The key concept in classical value taxonomies and modern structure value systems is that they provide interoperability and understanding of what someone values. Classical value taxonomies provide this by way of a small number of predefined dimensions —that \scare{should} cover all possible human values— whereas modern \scare{designed for AI} value systems provide this by way of small atomic value cards that can be easily understood in certain contexts to help make decisions.
 
 \subsection{Value elicitation and surveying methods}
 % How to measure human values
@@ -471,22 +455,47 @@ Psychologist and Philosophers have long been working on way to measure and elici
 
 Social scientists is more recent years have also been trying to investigate the values of people. There approach is more empirical and data driven as they want to understand the values of large groups as opposed ot individual people. The result is rather than small survey instruments (n$\approx$ 30) that measure value taxonomies they create large \term{value surveys} (n$\approx$ 300) that provide fine grained data. This provides a more nuanced understanding of the values of large groups of people with the caveat, that the values are not directly interpretable as they don't correspond to a strict value taxonomy.
 
-The benefit of these value surveys is because they are more granular they can be used by LLMs to train \cite{nieSurveytoBehaviorDownstreamAlignment2025,liCultureLLMIncorporatingCultural2024} and evaluate \cite{durmusMeasuringRepresentationSubjective2024,zhaoWorldValuesBenchLargeScaleBenchmark2024,aroraProbingPreTrainedLanguage2025} on human values. This is because they provide a large amount of stated and revealed preference data. Furthermore many of the large value surveys are regularly conducted on thousands of people every year \cite{WVS2020,NZAVS2025} providing up to date data on human values.
+These values are conducted regularly and at scale across the world \cite{WVS2020,NZAVS2025}. This means that they have both granularity and volume which makes them a good candidate for working with machine learning models. Because of this they have been used to train \cite{nieSurveytoBehaviorDownstreamAlignment2025,liCultureLLMIncorporatingCultural2024} and evaluate \cite{durmusMeasuringRepresentationSubjective2024,zhaoWorldValuesBenchLargeScaleBenchmark2024,aroraProbingPreTrainedLanguage2025} LLMs on human values.
 
 All of these surveying methods suffer from common issues of self-reporting bias \cite{podsakoffCommonMethodBiases2003} and social desirability bias \cite{crowneNewScaleSocial1960}. This means that the values reported by respondents may not accurately reflect their true values. \footnote{These biases generally mean that people are reporting what they wish their values were, or what they wish society was. This means they are aspirational values rather than actual values. An argument could be made that aligning to aspirational values is better than actual values, however this is a separate discussion and omitted in this report}.
 
 
 \subsection{More elaborate survey techniques}
-todo more elaborate and I won't be dooing this
+% More elaborate methods of value elicitation, examples, problems
 
-As value surveys suffer from problems there are alternative methods to elicit human values.
+To address the pitfalls of values surveys there are alternative methods to elicit human values that attempt to get around these problems. These methods. The reasoning is that humans act more naturally in natural situations rather than in artificial survey situations \cite{roethlisbergerManagementWorker1939,brunswikPerceptionRepresentativeDesign1956a}.
 
-Alternatively with modern AI systems one can use more complex surveying techniques like Moral Graph Elicitation (MGE) \cite{klingefjordWhatAreHuman2024} where a human subject has various conversations with a LLM to help them elicit why they made certain decisions or judgments for a variety of situations (e.g responding to someone asking about an abortion, helping a parent with parental decision). These conversations follow the rough structure of asking "why do you think that?", until the human subject is satisfied that they have fully expressed their values around the situation, which is formatted by an LLM. The key to this method is that unlike the value taxonomies or general surveys above it allows for each value to have a distinct use and context as a value card contains the value, the context it is used in and guidance on how to use it. Furthermore due to the dialogue nature it is targeted at finding revealed values rather than stated values.
+An example of a more elaborate method is that proposed by Klingefjord et al. \cite{klingefjordWhatAreHuman2024}. In this method a respondent has a conversation with an LLM in which they discuss why they feel a certain way about a certain topic. For example the respondent might be asked about what their advice to a parent who is struggling with a difficult child would be. The LLM would then probe the respondent by asking "why do you think that?" until the respondent and LLM is satisfied that the respondent has fully expressed their values that they have used to make their decision. The LLM can then write up a value statement that captures the values of the respondent for that situation.
 
-Another way to see revealed preference is by looking at the collective groups action. For example by looking at the values and positions of the political parties that people vote for one can see their values \cite{lehmannManifestoDataCollection2025}.
+Using LLMs to elicit values in this way can be effective as it can try to break through the traditional problems of surveys. It is an example of more qualitative methods of value elicitation that try to get a more nuanced view of human values. Other examples include focus groups and interviews. The complexity of these methods does introduce new problems in standardization and scalability of the process.
 
+Other surveying techniques can involve more indirect methods of eliciting values. This is normally done by studying their decisions and actions. An example of a method this is studying the voting patterns of people to elicit their values \cite{lehmannManifestoDataCollection2025}. These methods are easily scalable and are consistent in their elicitation process, yet them being so indirect requires more inference of and assumptions to be made to get from the data to the values.
+
+In my proposal I will not be using these more elaborate methods of value as they either are not scalable or they require too much inference from the data. Instead I will be using more traditional value surveys that provide fine grained data which can be used directly to train and evaluate LLMs on human values.
 
 \section{An introduction to my proposal}
 
 todo
 Write up a short summary of my proposal here so that it is part of the "marked" content.
+
+There are significant gaps in the current research on alignment of LLMs to human values. The first gap is that there is a lack of established methods for defining the alignment target in a way that fairly represents the values of all stakeholders. The second gap is that current alignment evaluation methods are not participatory and don' take into account out-of-distribution behavior. Below I will outline my project proposal that will address these gaps by a demonstration of an end to end alignment process. A full proposal can be found in appendix \ref{app:proposal}.
+
+\subsection{Goals of the project}
+
+The two main goals of this project are to:
+\begin{enumerate}
+    \item Test if we can use value survey data along with simple alignment methods to appreciably change the behavior of a model in a way that is more aligned to human values.
+    \item Develop a method of evaluating the alignment of a model to human values that is more participatory and evaluates the behavior of the model not just looking at single turn prompt responses.
+\end{enumerate}
+
+Using survey data to align models is a promising method as it requires low compute resources and can be done with readily available data. If it can be demonstrated (using developed evaluation methods) that it appreciably changes the behavior in the desired way (towards stakeholders) it will be a useful step for having democratically publicly built and deployed models.
+
+\subsection{Methodology}
+
+THis will be an end-to-end alignment project that will involve defining an alignment target, training models towards that target and evaluating the models on that target.
+
+To define the alignment target I will be using the World Values Survey \cite{WVS2020} which provides a 1000 responses to a 300 question survey about the values of people across the world. I wll use a few countries (e.g NZ, AUS, CAN) to define different alignment targets. 
+
+The training process takes in a pre-trained open weights model and fine-tunes it on the survey data. The model will be trained to respond to the questions in the same distribution as the respondents of the survey. Where it is hypothesized that the model learning to do this will lead to it behaving differently in other contexts.
+
+To evaluate how well the model is aligned I wil use both in-distribution and out-of-distribution evaluation. The in-distribution evaluation will be done by testing the model on held out questions from the survey and seeing how well it can predict the responses of the respondents. The out-of-distribution evaluation will be done by having the model act in certain situations and having humans judge how well the model acted in alignment with their values.
