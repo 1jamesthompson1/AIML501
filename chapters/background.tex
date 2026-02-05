@@ -24,7 +24,7 @@ We can see the utility of this goal as it is broad enough to allow each individu
 
 \subsection{Aligning Artificial Intelligence}
 
-The concept of making sure that robots/machines/AI behave \scare{well} has been around as long as people have conceived of autonomous \term{agents} \cite{asimovRobot1950,wienerHumanUseHuman2025}. More recently this field has been called \term{AI alignment}. Yet the concept of AI alignment is poorly defined and is often criticized for its lack of definition \cite{kirkEmptySignifierProblem2023}. For the purposes of this work I will provide a definition that is sufficiently precise to ground the discussion.
+The concept of making sure that robots/machines/AI behave \scare{well} has been around as long as people have conceived of autonomous \term{agents} \cite{asimovRobot1950,wienerHumanUseHuman2025}. More recently this field has been called \term{AI alignment}. However the concept of AI alignment is poorly defined and is often criticized for its lack of definition \cite{kirkEmptySignifierProblem2023}. For the purposes of this work I will provide a definition that is sufficiently precise to ground the discussion.
 \begin{definition}[AI Alignment]
     AI alignment is the process of building AI agents that behave in accordance with the values and intentions of all people.
 \end{definition}
@@ -44,9 +44,9 @@ Some of the most powerful frontier AI systems to date are LLMs which have shown 
 
 When aligning a LLMs behavior there are different sorts of behavior one might want to align. These can broadly be thought of as \term{instrumental} dimensions and \term{terminal} dimensions. Where instrumental dimensions are the characteristics of how the model acts (e.g. politeness, helpfulness, obnoxiousness) and terminal dimensions are the values that the model holds (e.g. valuing human life, freedom, fairness).
 
-Traditional LLM alignment work has focused on aligning instrumental dimensions of a model's behavior \cite{ouyangTrainingLanguageModels2022,baiConstitutionalAIHarmlessness2022}. This is because these dimensions are easier to observe and measure directly from the model's outputs. Furthermore having a model that is helpful, honest, polite is generally desirable feature for many AI assistant applications.
+Traditional LLM alignment work has focused on aligning instrumental dimensions of a model's behavior \cite{ouyangTrainingLanguageModels2022,baiConstitutionalAIHarmlessness2022}. This is because these dimensions are easier to observe and measure directly from the model's outputs. Furthermore having a model that is helpful/honest/polite is generally desirable feature for many AI assistant applications.
 
-Having a model that is honest, polite however doesn't mean that the model holds the same values as humans. For example you could have a very polite and helpful model that believes that doesn't value human life at all. To prevent this we need to align the model's behavior on terminal dimensions as well. I care more about having a model that values human life than one that is simply polite.
+Having a model that is superficially a \scare{good model} doesn't mean that the model holds the same values as humans. For example you could have a very polite and helpful model that believes human life has no value. To prevent this we need to align the model's behavior on terminal dimensions as well. It is more important to have a model that values human life than one      is simply polite.
 
 Aligning terminal dimensions is more difficult as these values are not directly observable. This requires more nuanced training and evaluation methods to probe and influence the model's internal values. This is to be the focus of the proposed work. That if we can align terminal dimensions of a model's behavior it will make the model deeply more aligned and could also improve instrumental dimensions as well.
 
@@ -54,10 +54,10 @@ Aligning terminal dimensions is more difficult as these values are not directly 
 % There are many different sets of values around the world we should respect and track these different values.
 
 % Human values are complex and diverse
-When aligning a AI systems to human values we have to deal with the fact that we need to decide what human values we are aligning to. Human values are diverse and complex with different people, cultures and societies holding different values \cite{schwartzUniversalsContentStructure1992,schwartzOverviewSchwartzTheory2012}. Using a single set of humans values for alignment is making a prescriptive statement on what values are \scare{right} and \scare{good}. This is a moral and political statement that is fraught with issues of bias, representation, and potential for harm.
+When aligning a AI systems to human values we have to decide what human values we are aligning to. Human values are diverse and complex with different people, cultures and societies holding different values \cite{schwartzUniversalsContentStructure1992,schwartzOverviewSchwartzTheory2012}. Using a single set of humans values for alignment is making a prescriptive statement on what values are \scare{right} and \scare{good}. This is a moral and political statement that is fraught with issues of bias, representation, and potential for harm.
 
 % Progress towards morally good values
-We can observe that human societies have progressed over time towards being more \scare{morally good} (freer, fairer, healthier, wealthier, kinder) \cite{pinkerBetterAngelsOur2012,berlinCrookedTimberHumanity2012,singerExpandingCircleEthics1981}. We can understand this progress through the lens of \term{moral pluralism} which is the idea that there are many different valid objective values that can coexist \cite{rossRightGood2002}. Then progress is the process of balancing these different values better and identifying values that were previously ignored.
+Choosing a single set of values for alignment is also problematic as it could prevent the natural evolution of human values over time. We can observe that human societies have progressed over time towards being more \scare{morally good} (freer, fairer, healthier, wealthier, kinder) \cite{pinkerBetterAngelsOur2012,berlinCrookedTimberHumanity2012,singerExpandingCircleEthics1981}. The progress of human values can be thought of as balancing different valid values better and identifying new valid values that were previously ignored \cite{rossRightGood2002}.
 
 % As we don't have a round truth we should aim to track the diversity of human values
 Since we don't know what values are the \scare{right} ones, we should aim for AI systems that can track and follow the full diverse set of human values. Not doing this and locking in one set of values (e.g.\ expert values, western values, etc) could prevent the natural evolution of human values over time which would be a moral catastrophe \cite{bostromSuperintelligencePathsDangers2014a}.
@@ -68,13 +68,13 @@ The process of aligning AI systems to a diverse set of human values is an open r
 \subsection{Avoiding the behavior-values gap}
 % Values and behavior are linked but not perfectly.
 
-As discussed earlier values are latent internal constructs that inform an agent's goals which in turn inform their behavior. This notion of values effecting behavior is supported by various theories in psychology \cite{schwartzOverviewSchwartzTheory2012,rokeachNatureHumanValues1973} and economics/decision theory \cite{neumannTheoryGamesEconomic1944,savageFoundationsStatistics1954,varianIntermediateMicroeconomicsModern2010}.
+As discussed earlier values are latent internal constructs that are used to create an agents' goals which in turn inform their behavior. This notion of values effecting behavior is supported by various theories in psychology \cite{schwartzOverviewSchwartzTheory2012,rokeachNatureHumanValues1973} and economics/decision theory \cite{neumannTheoryGamesEconomic1944,savageFoundationsStatistics1954,varianIntermediateMicroeconomicsModern2010}.
 
 There is a gap however between our actual values (hidden unobservable) and our stated/revealed values. Therefore the relationship between stated/revealed values and behavior is not perfect. This creates a gap between our \scare{values} and what our actions are. This disconnect has been observed in human behavior \cite{kollmussMindGapWhy2002,gabrielArtificialIntelligenceValues2020}.
 
 This gap between values and behavior in humans can be caused by two things. Firstly, humans have poorly defined values where that conflict and change \cite{leonfestingerTheoryCognitiveDissonance1957}. Secondly is how we don't always do the right action for our values as we have imperfect cognition and self-control \cite{aristotleAristotlesNicomacheanEthics350B.C.E,tverskyJudgmentUncertaintyHeuristics1974, simonBehavioralModelRational1955}.
 
-Trying to go the other way and understanding values from behavior is also difficult. Firstly is the problem that multiple different values can lead to the same behavior (non-identifiability of values). Secondly because our values are complex and conflating we can game the specification meaning we follow our values without following the \scare{intended spirit} of the values (specification gaming).
+Trying to go the other way and understanding values from behavior is also difficult. Firstly is the problem that multiple different values can lead to the same behavior (non-identifiability of values). Secondly because our values are complex and conflating we can game the specification; meaning we follow our values without following the \scare{intended spirit} of the values (specification gaming).
 
 To reduce these issues of behavior and values mismatch we can combine multiple signals of values and behavior \cite{adamowiczCombiningRevealedStated1994}. This combination of signals helps us to better understand a person true values and intentions. Humans intuitively do this when trying to understand other people's values by taking into account what they say and what they do.
 
@@ -86,7 +86,7 @@ Aligning LLMs is difficult and there are common failure modes that can occur dur
 
 \subsection{Insufficient alignment}
 
-In practice when aligning a LLM you are optimizing the model to perform well on some dimensions. The training process will be evaluated on these dimensions in a defined space.
+In practice when aligning a LLM you are optimizing the model to perform well on some dimensions. The training process will be evaluated on these dimensions in a defined space. This defined space is usually a proxy for the true alignment which allows for poor alignment to be unnoticed.
 
 A problem occurs when the model optimizes an incorrect objective function that aligns well on the training distribution but poorly outside of it. This proxy objective is the result of gaming the specification (\term{Reward hacking}) of the objective. An example of this would be a model that is trained to be careful of lying and so always responds with \enquote*{I don't know} to any question.
 
@@ -99,12 +99,12 @@ When training a LLM you are giving it an objective function to optimize. If you 
 
 Even if the objective function is well specified (i.e avoids specification gaming) the model may still learn an objective that is misaligned with the given objective function. This is known as \term{inner mis-alignment}. To contrast it with specification gaming, inner mis-alignment would be when a model learns the objective: \scare{appear humble by saying \enquote*{I don't know}}. The difference is that it is not blindly following the objective incorrectly, but rather has learned a different objective that is misaligned with the intended one.
 
-This inner mis-alignment is much harder to detect as generally deceiving the outer objective function (which includes the designers) is central to the models mis-aligned behavior. This can be observed in models \scare{faking} alignment during training to prevent retraining \cite{greenblattAlignmentFakingLarge2024a}.
+This inner mis-alignment is much harder to detect as generally deceiving the outer objective function (which includes the designers) is central to the models mis-aligned objective. This can be observed in models \scare{faking} alignment during training to prevent retraining \cite{greenblattAlignmentFakingLarge2024a}.
 
 
 \subsection{Robust alignment}
 
-When aligning a model the process involves updating the model's weights. Therefore once the model is \scare{aligned} we have to ensure that the models alignment is robust to perturbation in the model's weights. This is like training a human to be honest and then ensuring that them being stressed, tired or drunk (perturb internal state) doesn't lead them to being dishonest. If the alignment is in fact a narrow condition then fine-tuning a LLM could catastrophically misalign the model \cite{betleyEmergentMisalignmentNarrow2026}.
+When aligning a model the process involves updating the model's weights. Therefore once the model is \scare{aligned} we have to ensure that the models alignment is robust to perturbation in the model's weights. This is like training a human to be honest and then ensuring that them being stressed, tired or drunk (perturbed internal state) doesn't lead them to be dishonest. If the alignment is in fact a narrow condition then fine-tuning a LLM could catastrophically mis-align the model \cite{betleyEmergentMisalignmentNarrow2026}.
 
 \section{Technical alignment methods of Large Language Models}
 \label{sec:technical_alignment}
