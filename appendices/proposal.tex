@@ -4,7 +4,7 @@
 The goal of this project is to address some gaps in the current AI alignment landscape by a proof-of-concept end-to-end project. It will attempt to align a large language model to a set of human values collected from the public and to develop an evaluation method that can better measure alignment success on these values. To do this I will use value survey data to do alignment training and evaluate using behavioral assessments of the LLM by the public. Specifically, the project will set out to answer a series of research questions.
 
 \begin{enumerate}[label=\textbf{RQ\arabic*:}, ref=RQ\arabic*, leftmargin=*, itemsep=1em]
-  \item \textbf{Alignment feasibility.} Do simple post-training methods (e.g  SFT) work to appreciably align a large language model to a set of human values? \label{rq1}
+  \item \textbf{Alignment feasibility.} Do simple post-training methods (e.g. SFT) work to appreciably align a large language model to a set of human values? \label{rq1}
 
   \item \textbf{Evaluation.} What method can be used to evaluate the alignment of a large language model to a set of representatively collected human values, in a way that remains democratically grounded? \label{rq2}
 \end{enumerate}
@@ -33,7 +33,7 @@ To address these research questions, I will need to carry out a sequence of step
 
 \subsection{Defining the alignment target}
 
-For pragmatic reasons, I will use existing survey data from the world  to define a set of human values to align towards. This will provide me with a dataset of 300 questions answered by about 1,000 respondents in multiple countries. Either each country will be treated as a separate cluster or I will cluster respondents based on their answers to define value clusters. This will allow me to explore pluralistic alignment targets.
+For pragmatic reasons, I will use existing survey data from the World Values Survey to define a set of human values to align towards. This will provide me with a dataset of 300 questions answered by about 1,000 respondents in multiple countries. Either each country will be treated as a separate cluster or I will cluster respondents based on their answers to define value clusters. This will allow me to explore pluralistic alignment targets.
 
 I will define two sorts of alignment targets. The first will be a set of global values that represent the values of the population as a whole, this can be derived by taking the mode of the entire response along with a variation metric. The second will be pluralistic targets that get defined as the mode response within each cluster of respondents (one cluster for each country). This will allow me to explore the differences between different value alignment targets.
 

@@ -24,7 +24,7 @@ We can see the utility of this goal as it is broad enough to allow each individu
 
 \subsection{Aligning Artificial Intelligence}
 
-The concept of making sure that robots/machines/AI behave \scare{well} has been around as long as people have conceived of autonomous \term{agents} \cite{asimovRobot1950,wienerHumanUseHuman2025}. More recently this field has been called \term{AI alignment}. Yet the concept of AI alignment is a poorly defined and is often criticized for its lack of definition \cite{kirkEmptySignifierProblem2023}. For the purposes of this work I will provide a definition that is sufficiently precise to ground the discussion.
+The concept of making sure that robots/machines/AI behave \scare{well} has been around as long as people have conceived of autonomous \term{agents} \cite{asimovRobot1950,wienerHumanUseHuman2025}. More recently this field has been called \term{AI alignment}. Yet the concept of AI alignment is poorly defined and is often criticized for its lack of definition \cite{kirkEmptySignifierProblem2023}. For the purposes of this work I will provide a definition that is sufficiently precise to ground the discussion.
 \begin{definition}[AI Alignment]
     AI alignment is the process of building AI agents that behave in accordance with the values and intentions of all people.
 \end{definition}
@@ -82,15 +82,15 @@ Modern LLM alignment techniques can be thought of as trying to align using a com
 
 \section{Some ways alignment training processes can fail}
 
-Aligning of LLMs is difficult and there are common failure modes that can occur during the alignment process. These failure modes are prevalent in deployed models due to current evaluation metrics insufficiencies, a discussion of evaluation methods is provides in a later section \ref{sub:eval_alignment}. In this section I will outline some of the common failure modes that can occur when trying to align LLMs.
+Aligning LLMs is difficult and there are common failure modes that can occur during the alignment process. These failure modes are prevalent in deployed models due to current evaluation metrics insufficiencies, a discussion of evaluation methods is provides in a later section \ref{sub:eval_alignment}. In this section I will outline some of the common failure modes that can occur when trying to align LLMs.
 
 \subsection{Insufficient alignment}
 
 In practice when aligning a LLM you are optimizing the model to perform well on some dimensions. The training process will be evaluated on these dimensions in a defined space.
 
-A problem occurs when the model optimizes an incorrect objective function that aligns well on the training distribution but poorly outside of it. This proxy objective is result of gaming the specification (\term{Reward hacking}) of the objective. An example of this would be a model that is trained to be careful of lying and so always responds with \enquote*{I don't know} to any question.
+A problem occurs when the model optimizes an incorrect objective function that aligns well on the training distribution but poorly outside of it. This proxy objective is the result of gaming the specification (\term{Reward hacking}) of the objective. An example of this would be a model that is trained to be careful of lying and so always responds with \enquote*{I don't know} to any question.
 
-Alternatively the model may only be in \term{Shallow alignment} where it has learned the right objective but insufficiently well to generalize outside of the training distribution. It was Qi et al. \cite{qiSafetyAlignmentShould2024} who coined the term when describing how LLMs can appear aligned yet act misaligned if they are simply prompted with the start of a mis aligned response.
+Alternatively, the model may only be in \term{Shallow alignment} where it has learned the right objective but insufficiently well to generalize outside of the training distribution. It was Qi et al. \cite{qiSafetyAlignmentShould2024} who coined the term when describing how LLMs can appear aligned yet act misaligned if they are simply prompted with the start of a mis aligned response.
 
 
 \subsection{Inner and outer mis-alignment}
@@ -99,12 +99,12 @@ When training a LLM you are giving it an objective function to optimize. If you 
 
 Even if the objective function is well specified (i.e avoids specification gaming) the model may still learn an objective that is misaligned with the given objective function. This is known as \term{inner mis-alignment}. To contrast it with specification gaming, inner mis-alignment would be when a model learns the objective: \scare{appear humble by saying \enquote*{I don't know}}. The difference is that it is not blindly following the objective incorrectly, but rather has learned a different objective that is misaligned with the intended one.
 
-This inner mis-alignment is much harder to detect as generally deceiving the outer objective function (which includes the designers) is central to the models mis-aligned behavior. This can observed in models \scare{faking} alignment during training to prevent retraining \cite{greenblattAlignmentFakingLarge2024a}.
+This inner mis-alignment is much harder to detect as generally deceiving the outer objective function (which includes the designers) is central to the models mis-aligned behavior. This can be observed in models \scare{faking} alignment during training to prevent retraining \cite{greenblattAlignmentFakingLarge2024a}.
 
 
 \subsection{Robust alignment}
 
-When aligning a model the process involves updating the model's weights. Therefore once the model is \scare{aligned} we have to ensure that the models alignment is robust to perturbation in the model's weights. This is like training a human to be honest and then ensuring that them being stressed, tried or drunk (perturb internal state) doesn't lead them to being dishonest. If the alignment is in fact a narrow condition then fine-tuning a LLM could catastrophically misalign the model \cite{betleyEmergentMisalignmentNarrow2026}.
+When aligning a model the process involves updating the model's weights. Therefore once the model is \scare{aligned} we have to ensure that the models alignment is robust to perturbation in the model's weights. This is like training a human to be honest and then ensuring that them being stressed, tired or drunk (perturb internal state) doesn't lead them to being dishonest. If the alignment is in fact a narrow condition then fine-tuning a LLM could catastrophically misalign the model \cite{betleyEmergentMisalignmentNarrow2026}.
 
 \section{Technical alignment methods of Large Language Models}
 \label{sec:technical_alignment}
@@ -113,7 +113,7 @@ This section assumes familiarity with the basic concepts of LLMs as outlined in 
 
 \subsection{Alignment datasets}
 
-Alignment involves having an target. In practice this target is provided by some \term{alignment dataset} which usually contains prompts and expected responses. By having the model optimize to produce the expected responses it will push the model towards the desired behavior.
+Alignment involves having a target. In practice this target is provided by some \term{alignment dataset} which usually contains prompts and expected responses. By having the model optimize to produce the expected responses it will push the model towards the desired behavior.
 
 These datasets can provide multiple types of information that the model can use. In their most simplest forms they can provide explicit examples of desired behavior (e.g. \enquote*{Given prompt X the expected response is Y}). These examples are normally actions that implicitly reflect the values of the labelers who created the dataset.
 
@@ -145,7 +145,7 @@ Creating preference data is a costly process which limits the size and diversity
 
 \subsection{Reinforcement Learning from Human Feedback}
 
-Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} used the preference dataset to train a reward model and then a reinforcement learning algorithm to optimize the model based on this feedback. This method popularized post-training alignment and was used to train InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
+Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} uses the preference dataset to train a reward model and then a reinforcement learning algorithm to optimize the model based on this feedback. This method popularized post-training alignment and was used to train InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
 
 The key idea of RLHF is that the model gets feedback (\scare{from a human}) of how well it is doing while learning. This idea has been around for a while \cite{christianoDeepReinforcementLearning2017}. Yet RLHF was the first to use it successfully in LLMs and it quickly became a standard \cite{team2023gemini,baiQwenTechnicalReport2023,shaoDeepSeekMathPushingLimits2024}.
 
@@ -153,7 +153,7 @@ The key idea of RLHF is that the model gets feedback (\scare{from a human}) of h
 
 RLHF is separated into three distinct stages. Firstly is supervised fine-tuning (SFT) where a pre-trained language model is fine-tuned on a dataset of prompts and human written expected responses to those prompts.
 
-The second step is collecting multiple responses from the SFT model to create a set of prompts and response then having human labelers rank these responses from best to worst. This ranked data is then used to train a preference model (PM) that can predict which of two responses is better aligned to human preferences. The preference model is trained using a Bradley -Terry loss function where the scores $\pi_i$ is equal to $\exp(\text{PM}_\theta(x, i))$. This is fed into \ref{eq:bradley-terry-loss} to create the loss function for the preference model.
+The second step is collecting multiple responses from the SFT model to create a set of prompts and response, then having human labelers rank these responses from best to worst. This ranked data is then used to train a preference model (PM) that can predict which of two responses is better aligned to human preferences. The preference model is trained using a Bradley -Terry loss function where the scores $\pi_i$ is equal to $\exp(\text{PM}_\theta(x, i))$. This is fed into \ref{eq:bradley-terry-loss} to create the loss function for the preference model.
 
 Finally the fitted PM is used as a reward signal in the PPO \cite{schulmanProximalPolicyOptimization2017} RL algorithm to further fine-tune the SFT model and create the final RLHF model.
 
@@ -165,7 +165,7 @@ This has meant that DPO has become a standard and strong baseline for preference
 
 \subsubsection{How does DPO work?}
 
-DPO starts with the same preferences data as RLHF; a set of prompts with responses ranked by humans. Like RLHF it starts with a pre-trained language model and is supervised fine-tuned on the prompts and highest ranked responses to create an SFT model. Instead of training a seperate preference model DPO uses the SFT model as a reference model and defines the reward function $\hat{r}_\theta(x,y) = \log \pi_\theta(y|x) - \log \pi_{SFT}(y|x)$. Then by some derivation \cite{rafailovDirectPreferenceOptimization2024} it can be shown that the following loss function gradient can be used to optimize the Bradley Terry model directly on the preference data:
+DPO starts with the same preferences data as RLHF; a set of prompts with responses ranked by humans. Like RLHF, it starts with a pre-trained language model and is supervised fine-tuned on the prompts and highest ranked responses to create an SFT model. Instead of training a separate preference model DPO uses the SFT model as a reference model and defines the reward function $\hat{r}_\theta(x,y) = \log \pi_\theta(y|x) - \log \pi_{SFT}(y|x)$. Then by some derivation \cite{rafailovDirectPreferenceOptimization2024} it can be shown that the following loss function gradient can be used to optimize the Bradley Terry model directly on the preference data:
 \begin{equation*}
 \begin{aligned}
 \nabla_\theta \mathcal{L}_{\mathrm{DPO}}(\theta)
@@ -191,7 +191,7 @@ DPO starts with the same preferences data as RLHF; a set of prompts with respons
 \end{aligned}
 \end{equation*}
 
-\noindent Where $\sigma$ is the sigmoid function, and $(x, y^+, y^-)$ are the prompt, preferred response, and dis-preferred response respectively. Rafailov et Al \cite{rafailovDirectPreferenceOptimization2024} found that the reward model correctness weighting term for the update is very important. This gradient update can be calculated with only 4 forward passes through the network per preference pair (2 for reference model and two for current model), making it much more efficient than RLHF \footnote{RLHF will need to do many forward passes of the network to train the preference model, then it will still have to do 3 forward passes for each datapoint when it comes to the RL step.}.
+\noindent Where $\sigma$ is the sigmoid function, and $(x, y^+, y^-)$ are the prompt, preferred response, and dis-preferred response respectively. Rafailov et al. \cite{rafailovDirectPreferenceOptimization2024} found that the reward model correctness weighting term for the update is very important. This gradient update can be calculated with only 4 forward passes through the network per preference pair (2 for reference model and two for current model), making it much more efficient than RLHF \footnote{RLHF will need to do many forward passes of the network to train the preference model, then it will still have to do 3 forward passes for each datapoint when it comes to the RL step}.
 
 \subsection{Kahneman-Tversky Optimization}
 
@@ -475,9 +475,6 @@ In my proposal I will not be using these more elaborate methods of value as they
 
 \section{An introduction to my proposal}
 
-todo
-Write up a short summary of my proposal here so that it is part of the "marked" content.
-
 There are significant gaps in the current research on alignment of LLMs to human values. The first gap is that there is a lack of established methods for defining the alignment target in a way that fairly represents the values of all stakeholders. The second gap is that current alignment evaluation methods are not participatory and don' take into account out-of-distribution behavior. Below I will outline my project proposal that will address these gaps by a demonstration of an end to end alignment process. A full proposal can be found in appendix \ref{app:proposal}.
 
 \subsection{Goals of the project}
@@ -492,7 +489,7 @@ Using survey data to align models is a promising method as it requires low compu
 
 \subsection{Methodology}
 
-THis will be an end-to-end alignment project that will involve defining an alignment target, training models towards that target and evaluating the models on that target.
+This will be an end-to-end alignment project that will involve defining an alignment target, training models towards that target and evaluating the models on that target.
 
 To define the alignment target I will be using the World Values Survey \cite{WVS2020} which provides a 1000 responses to a 300 question survey about the values of people across the world. I wll use a few countries (e.g NZ, AUS, CAN) to define different alignment targets. 
 
