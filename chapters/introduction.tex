@@ -1,20 +1,26 @@
-\section{Motivation}
+Globally, groups are building increasingly powerful AI systems. These systems are becoming embedded into many aspects of our lives and society and—notably—are operating with more autonomy than previous technologies. \term{Large Language Models} (\term{LLMs}) are a class of AI systems that have shown remarkable capabilities in understanding and generating natural language, audio and visual content. With these advanced capabilities, LLMs are being used to act both on our behalf and alongside us. The application of these systems motivates alignment between the systems and how we would want them to behave. Given the early stages of AI development, effective action and direction now could have outsized downstream effects.
 
-Globally, groups are building increasingly powerful AI systems. These systems are becoming embedded into many aspects of our lives and society and, notably, are operating with more autonomy than previous technologies. \term{Large Language Models} (\term{LLMs}) are a class of AI systems that have shown remarkable capabilities in understanding and generating natural language, audio and visual content. With these advanced capabilities, LLMs are being used to act both on our behalf and alongside us. The application of these systems motivates alignment between the systems and how we would want them to behave. Given the early stages of AI development and its impact effective action and direction now could have outsized downstream effects.
+In this report I focus on the \term{alignment} of LLMs; that is the process of taking a pre-trained LLM and making it behave more in a way that we want. I argue that current alignment methods lack democratically grounded processes and instead have perverse incentives that make alignment with public values/good unrealistic. I provide a project proposal to research and implement a method to align LLMs to public values and evaluate the success of this alignment in a way that is democratically grounded, transparent and fair.
 
-In this report I focus on the alignment of LLMs specifically. I provide an introduction to the alignment problem, discuss current LLM alignment methods and provide the sociopolitical context of AI alignment. I argue that current alignment methods lack democratically grounded processes and instead have perverse incentives that make alignment with public values/good unrealistic. I provide a project proposal to research and implement a method to align LLMs to public values and evaluate the success of this alignment in a way that is democratically grounded, transparent and fair.
+\section{The Alignment Process of LLMs}
 
-\section{The Alignment Problem}
-
-\term{AI alignment} is the field of study and practice that focuses on ensuring that AI systems' goals and behaviors are in line with what designers and end users intend. The field itself is relatively new, but draws on older ideas from control theory, ethics, policy, and governance.
+AI alignment is the field of study and practice that focuses on ensuring that AI systems' goals and behaviors are in line with what designers and end users intend. The field itself is relatively new, but draws on older ideas from control theory, ethics, policy, and governance.
 
 LLMs are typically trained on vast amounts of text data using a \term{self-supervised learning} approach where they learn to predict the next word in a sentence. LLM alignment generally refers to the process of making their outputs not just coherent and contextually relevant, but also consistent with what users (and society) would want. For example, a counselling assistant that prioritizes immediate user approval could validate harmful rationalizations (e.g., minimizing alcohol dependence) rather than supporting long-term wellbeing.
 
-Various methods have been proposed and implemented to help align LLMs to better match user intentions and values. These methods generally involve generating a response to a prompt and then using a feedback mechanism to adjust the model's parameters. The response dataset creates an \term{alignment target}, that in production is whatever best serves the deploying organization's objectives (e.g., growth, retention, revenue). This is often at odds with end users' intentions and values.
+Various methods have been proposed and implemented to help solve the \term{technical alignment problem} which is how to change the weights of a model to be more aligned. These methods generally involve generating a response to a prompt and then using a feedback mechanism to adjust the model's parameters. The response dataset creates an \term{alignment target}. This alignment target is usually whatever best serves the deploying organization's objectives (e.g., growth, retention, revenue), which is often at odds with end users' intentions and values.
 
-\section{A way to move forward}
+\section{Problems with Alignment processes}
 
-To solve the alignment problem we need to not just improve methods of making LLMs aligned to a target, but also need ways to defensibly define a target and evaluation process. Current methods in the entire AI stack lack transparency, public participation and public accountability. This makes them in-defensible in a democratic context. Therefore, I argue to move forward we need to use more democratically grounded methods to define alignment targets and evaluate alignment success.
+Besides the technical alignment problem, there are also two other problems with the current alignment processes. This means that even if the technical alignment problem is solved, it is not guaranteed that the resulting model will be beneficial to all of society.
+
+The first is the \term{value selection problem} which is the problem of deciding what values we want the AI to be aligned to. It is important because we don't all agree on what values we want AI to be aligned to yet we are all affected by the values that AI is aligned to.
+
+The second is the \term{transparency problem} which is that even if we have a clear alignment target we also need to know how it was used and how well the model is aligned to it. This is important because without transparency we can't hold organizations accountable for the alignment of their models. Without being able to hold them accountable they have no incentive to align their models to any target that isn't just about maximizing their profits (in a for-profit situation).
+
+\section{A way to move forward: Democratically Grounded Alignment}
+
+To solve the alignment problem we need to not just improve methods of making LLMs aligned to a target, but also need ways to defensibly define a target and an evaluation process. Current methods in the entire AI stack lack transparency, public participation and public accountability. This makes them in-defensible in a democratic context. Therefore, I argue to move forward we need to use more democratically grounded methods to define alignment targets and evaluate alignment success.
 
 We can improve the definition of alignment targets by using public participation methods to gather a diverse set of values and preferences. This can then be used to create an alignment target that fairly represents the public's values. Current evaluation methods for alignment success are \scare{AI driven}, opaque and mainly measure short term response quality. Even if grounded in human feedback these methods don't judge models on real world situations or over longer time horizons.
 
@@ -29,14 +35,10 @@ This report is structured as a chapter and two appendices. The chapter is design
 
 In this chapter I provide a comprehensive background study covering alignment as a field, technical LLM alignment, human values and a discussion of the sociopolitical context of AI. This provides the context for what is currently known in the field, what is wrong and how we might move towards a better future.
 
-\subsection*{Appendices}
-
-In the two appendices I provide additional related ideas and a full project proposal.
-
-\subsubsection{Appendix A: Related Ideas}
+\subsection*{Appendix A: Related Ideas}
 
 Here I introduce and discuss related ideas that are relevant to the main proposal yet not central to it. These include an overview of current and future AI safety concerns as well as an introduction to LLMs to help inform readers who are less familiar with the technical details.
 
-\subsubsection{Appendix B: Proposal}
+\subsection*{Appendix B: Proposal}
 
 Here I will propose a project to research and implement a method to align LLMs to public values and provide a strong democratically grounded evaluation methods to measure the success of alignment. This fills the gap between current alignment methods and the need for scalable, democratically grounded alignment techniques.
