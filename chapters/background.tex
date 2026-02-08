@@ -480,14 +480,14 @@ In my proposal I will not be using these more elaborate methods of value as they
 \section{An introduction to my proposal}
 \label{sec:proposal_intro}
 
-There are significant gaps in the current research on alignment of LLMs to human values. The first gap is that there is a lack of established methods for defining the alignment target in a way that fairly represents the values of all stakeholders. The second gap is that current alignment evaluation methods are not participatory and don' take into account out-of-distribution behavior. Below I will outline my project proposal that will address these gaps by a demonstration of an end to end alignment process. A full proposal can be found in appendix \ref{app:proposal}.
+There are significant gaps in the current research on alignment of LLMs to human values. The first gap is that there is a lack of established methods for defining the alignment target in a way that fairly represents the values of all stakeholders. The second gap is that current alignment evaluation methods are not participatory and don't take into account out-of-distribution behavior. Below I will outline my project proposal that will address these gaps by a demonstration of an end to end alignment process. A full proposal can be found in appendix \ref{app:proposal}.
 
 \subsection{Goals of the project}
 
 The two main goals of this project are to:
 \begin{enumerate}
     \item Test if we can use value survey data along with simple alignment methods to appreciably change the behavior of a model in a way that is more aligned to human values.
-    \item Develop a method of evaluating the alignment of a model to human values that is more participatory and evaluates the behavior of the model not just looking at single turn prompt responses.
+    \item Develop a method of evaluating the alignment of a model to human values that is more participatory and evaluates the behavior of the model, not just looking at single turn prompt responses.
 \end{enumerate}
 
 Using survey data to align models is a promising method as it requires low compute resources and can be done with readily available data. If it can be demonstrated (using developed evaluation methods) that it appreciably changes the behavior in the desired way (towards stakeholders) it will be a useful step for having democratically publicly built and deployed models.
@@ -496,8 +496,8 @@ Using survey data to align models is a promising method as it requires low compu
 
 This will be an end-to-end alignment project that will involve defining an alignment target, training models towards that target and evaluating the models on that target.
 
-To define the alignment target I will be using the World Values Survey \cite{WVS2020} which provides a 1000 responses to a 300 question survey about the values of people across the world. I wll use a few countries (e.g NZ, AUS, CAN) to define different alignment targets. 
+To define the alignment target I will be using the World Values Survey \cite{WVS2020} which provides a 1000 responses to a 300 question survey about the values of people across the world. I will use a few countries (e.g NZ, AUS, CAN) to define different alignment targets. 
 
 The training process takes in a pre-trained open weights model and fine-tunes it on the survey data. The model will be trained to respond to the questions in the same distribution as the respondents of the survey. Where it is hypothesized that the model learning to do this will lead to it behaving differently in other contexts.
 
-To evaluate how well the model is aligned I wil use both in-distribution and out-of-distribution evaluation. The in-distribution evaluation will be done by testing the model on held out questions from the survey and seeing how well it can predict the responses of the respondents. The out-of-distribution evaluation will be done by having the model act in certain situations and having humans judge how well the model acted in alignment with their values.
+To evaluate how well the model is aligned I will use both in-distribution and out-of-distribution evaluation. The in-distribution evaluation will be done by testing the model on held out questions from the survey and seeing how well it can predict the responses of the respondents. The out-of-distribution evaluation will be done by having the model act in certain situations and having humans judge how well the model acted in alignment with \scare{what they would have done.}.
