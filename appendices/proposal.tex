@@ -4,18 +4,18 @@
 The goal of this project is to address some gaps in the current AI alignment landscape by a proof-of-concept end-to-end project. It will attempt to align a large language model to a set of human values collected from the public and to develop an evaluation method that can better measure alignment success on these values. To do this I will use value survey data to do alignment training and evaluate using behavioral assessments of the LLM by the public. Specifically, the project will set out to answer a series of research questions.
 
 \begin{enumerate}[label=\textbf{RQ\arabic*:}, ref=RQ\arabic*, leftmargin=*, itemsep=1em]
-  \item \textbf{Alignment feasibility.} Do simple post-training methods (e.g. SFT) work to appreciably align a large language model to a set of human values? \label{rq1}
+  \item \textbf{Alignment feasibility.} Do simple post-training methods (e.g. SFT, KTO) work to appreciably align a large language model to a set of human values? \label{rq1}
 
   \item \textbf{Evaluation.} What method can be used to evaluate the alignment of a large language model to a set of representatively collected human values, in a way that remains democratically grounded? \label{rq2}
 \end{enumerate}
 
-These research questions, if addressed, would provide useful insights into the feasibility of aligning large language models to the public in a democratically grounded way\footnote{These research questions are supported by efforts like \cite{anwarFoundationalChallengesAssuring2024}}. This is of particular importance within the context of Public, Sovereign and Democratic AI \cite{daleSovereignAI20252025,nfeltSovereignRemediesAI2025,publicaiPublicAIWhite2024,ovadyaDemocraticAIPossible2025} movements that are pushing for more public participation, oversight, and accountability in AI systems.
+These research questions, if addressed, would provide useful insights into the feasibility of aligning large language models to the public in a democratically grounded way\footnote{These research questions are related to \scare{foundational} challenges in AI safety proposed by \cite{anwarFoundationalChallengesAssuring2024}}. This is of particular importance within the context of Public, Sovereign and Democratic AI \cite{daleSovereignAI20252025,nfeltSovereignRemediesAI2025,publicaiPublicAIWhite2024,ovadyaDemocraticAIPossible2025} movements that are pushing for more public participation, oversight, and accountability in AI systems.
 
 This project sets out with some hypotheses around these research questions.
 
 
 \begin{enumerate}[label=\textbf{H\arabic*:}]
-    \item A small ($<$40B parameters) \term{open-weights} LLM has the ability to understand the survey questions and model a respondents values when given its responses. \\
+    \item A small ($<$40B parameters) \term{open-weights} LLM has the ability to understand the survey questions and model a respondent's values when given its responses. \\
     \textit{Justification:} Small LLMs have been shown to respond positively to fine tuning with value/opinion survey data with the result of better prediction of survey responses \cite{suhLanguageModelFineTuning2025}.
     
     \item Fine-tuning a base LLM by simply telling it which answers to a survey question is \scare{correct} will change its behavior in downstream tasks.\\
@@ -42,6 +42,9 @@ I will define two sorts of alignment targets. The first will be a set of global 
 Recent work \cite{nieSurveytoBehaviorDownstreamAlignment2025} suggests that simple SFT may have appreciable alignment effects. Therefore, I will attempt to use SFT by getting the model to answer the survey questions correctly, in Figure \ref{fig:wvs-simple-sft} one can see the basic outline. If this proves insufficient, I will explore more complex methods such as KTO with binary feedback (correct survey response, incorrect survey response). These methods will be used to align a base LLM to the defined alignment targets from step 1.
 
 Given there are only about 290 survey questions, I will need to augment the data to ensure there are enough training examples. I will do this by using different templates that pose the same question in different ways. Importantly the actual content of the question will remain the same, only the system prompt and structure of getting the LLM to answer will change. By having a set of different templates it is plausible that the 290 initial questions can be augmented to create a training set of about 1500 examples.
+
+The model will be trained to answer the question in the same distribution as the respondents of the survey. This will be achieved by sampling from the distribution of responses for each question template. If SFT/KTO is not able to adequately understand the distribution, then more direct methods of teaching the model to create the actual distribution will be explored.
+
 
 \begin{figure}[h]
 \centering
@@ -95,7 +98,7 @@ To evaluate the success of the alignment, I will need to develop an evaluation m
 
 The first evaluation method will involve holding out a set of survey questions from the training data. The test split will be done by splitting out questions that are semantically similar to each other and holding out different question templates. This will ensure that the model has at least some ability to generalize to unseen questions.
 
-The second evaluation method will involve getting the model to engage in various simulations of real world tasks. Then I will recruit participants from the various clusters defined in step 1 to rank which model actions best align with their values in these scenarios. This will provide a human-grounded evaluation of alignment success.
+The second evaluation method will involve getting the model to engage in various simulations of real-world tasks. Then I will recruit participants from the various clusters defined in step 1 to rank which model actions best align with their values in these scenarios. This will provide a human-grounded evaluation of alignment success.
 
 These evaluations combined will provide a robust measure of how well the model has understood the human values as well as how it actually affects its behavior in more realistic settings.
 
@@ -182,7 +185,7 @@ Figure \ref{fig:timeline} shows the proposed timeline for a 18-week project.
 
 \subsection{Computational resources}
 
-To train and evaluate the model, hardware will be needed. If I can train models with about 30 billion parameters, I will be able to get near-SOTA performance \footnote{Based on the \href{https://artificialanalysis.ai/leaderboards}{Artificial Analysis leaderboards}: 30B parameters achieve about 60\% of the performance of frontier models.}. Using modern quantization methods \cite{dettmersQLoRAEfficientFinetuning2023,dettmersLLMint88bitMatrix2022} and parameter-efficient fine-tuning methods \cite{huLoRALowRankAdaptation2021,dettmersQLoRAEfficientFinetuning2023}, I should be able to fine-tune these models using around 80GB of VRAM (h100, h200 etc). Therefore, I estimate needing about 240 USD of GPU time to carry out the fine-tuning and evaluation if hardware is rented in the cloud \footnote{Each fine-tuning run will take in the realm of 3--6 hours depending on the size of the model, amount of data used, alignment methods used, and GPU hardware. About 80 hours (5 hours per fine-tune * 3 different methods * 5 different value sets + 5 hours of evaluation) of GPU time will be needed at a cost of 2--3 USD for a single hour on a high-end GPU (e.g. H200) \cite{vastai2026}}. Alternatively the university has some GPU resources that could be used and might be sufficient.
+To train and evaluate the model, hardware will be needed. If I can train models with about 30 billion parameters, I will be able to get near-SOTA performance \footnote{Based on the \href{https://artificialanalysis.ai/leaderboards}{Artificial Analysis leaderboards}: 30B parameters achieve about 60\% of the performance of frontier models.}. Using modern quantization methods \cite{dettmersQLoRAEfficientFinetuning2023,dettmersLLMint88bitMatrix2022} and parameter-efficient fine-tuning methods \cite{huLoRALowRankAdaptation2021,dettmersQLoRAEfficientFinetuning2023}, I should be able to fine-tune these models using around 80GB of VRAM (h100, h200 etc). Therefore, I estimate needing about 360 USD of GPU time to carry out the fine-tuning and evaluation if hardware is rented in the cloud \footnote{Each fine-tuning run will take in the realm of 3--6 hours depending on the size of the model, amount of data used, alignment methods used, and GPU hardware. About 120 hours 1.5 fudge factor * (5 hours per fine-tune * 3 different methods * 5 different value sets + 5 hours of evaluation) of GPU time will be needed at a cost of 2--3 USD for a single hour on a high-end GPU (e.g. H200) \cite{vastai2026}}. Alternatively the university has some GPU resources that could be used. The university hardware may be sufficient yet would require more experiment design to operate within the constraints of the hardware.
 
 \subsection{Survey data}
 
@@ -190,7 +193,7 @@ The initial alignment target will be defined using existing survey data from the
 
 \subsection{Public consultation responses}
 
-To create a rigorous evaluation of the alignment process a public consultation process will be needed. This will require recruiting participants from various clusters of the NZ population to provide feedback. Each participants will rate how much an AI agents actions (i.e responses) align with their values. I would expect to need at least 50 people from various countries to complete about a 30 minutes task (including instructions). The complete design of this is left to the research phase.
+To create a rigorous evaluation of the alignment process a public consultation process will be needed. This will require recruiting participants from various clusters of the NZ population to provide feedback. Each participant will rate how much an AI agent's actions (i.e., responses) align with their values. I would expect to need at least 50 people from various countries to complete about a 30 minutes task (including instructions). The complete design of this is left to the research phase.
 
 \section{Ethical considerations}
 
