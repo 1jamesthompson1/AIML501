@@ -81,7 +81,7 @@ Trying to go the other way and understanding values from behavior is also diffic
 
 To reduce these issues of behavior and values mismatch we can combine multiple signals of values and behavior \cite{adamowiczCombiningRevealedStated1994}. This combination of signals helps us to better understand a person true values and intentions. Humans intuitively do this when trying to understand other people's values by taking into account what they say and what they do.
 
-Modern LLM alignment techniques can be thought of as trying to align using a combination of values (explicit feedback in post-training) and behavior (pre-training data). This combination of multiple signals should help with the downstream output behavior of the model does actually align with what humans would intend. In section \ref{sec:technical_alignment} I discuss how these methods work in detail.
+Modern LLM alignment techniques can be thought of as trying to align using a combination of values (explicit feedback on responses) and behavior (general patterns in main training corpus). This combination of multiple signals should help with the downstream output behavior of the model does actually align with what humans would intend. In section \ref{sec:technical_alignment} I discuss how these methods work in detail.
 
 \section{Some ways alignment training processes can fail}
 \label{sec:alignment_problems}
@@ -113,29 +113,29 @@ Aligning a model is a process that involves updating the model's weights. Theref
 \section{Technical alignment methods of Large Language Models}
 \label{sec:technical_alignment}
 
-This section assumes familiarity with the basic concepts of LLMs as outlined in appendix \ref{sec:LLMs}. Pre-training of a language model involves training a large neural network to predict the next token. This does not necessarily mean that the model will produce useful outputs that align with what the users/designers want. Therefore, aligning LLMs is generally \footnote{Other methods are proposed which embed the alignment within the pre-training step itself. Commonly used methods include filtering/curating training data. It has been shown that \scare{negative AI stereotypes} in the training data can have a self-fulfilling prophecy effect and increase mis-aligned behavior \cite{ticeAlignmentPretrainingAI2026}.} the process of taking the pre-trained model and fine-tuning it to better match what the designers and end users expect from the model. This process is called post-training. In this section I will introduce common post-training alignment paradigms and specific methods used to align LLMs.
+This section assumes familiarity with the basic concepts of LLMs as outlined in appendix \ref{sec:LLMs}. \term{Pre-training} of a language model involves training a large neural network to predict the next token. This does not necessarily mean that the model will produce useful outputs that align with what the users/designers want. Therefore, aligning LLMs is generally \footnote{Other methods are proposed which embed the alignment within the pre-training step itself. Commonly used methods include filtering/curating training data. It has been shown that \scare{negative AI stereotypes} in the training data can have a self-fulfilling prophecy effect and increase mis-aligned behavior \cite{ticeAlignmentPretrainingAI2026}.} the process of taking the pre-trained model and fine-tuning it to better match what the designers and end users expect from the model. This process is called \term{post-training}. In this section I will introduce common post-training alignment paradigms and specific methods used to align LLMs.
 
 \subsection{Alignment datasets}
 
 Alignment involves having a target. In practice this target is provided by some \term{alignment dataset} which usually contains prompts and expected responses. By having the model optimize to produce the expected responses it will push the model towards the desired behavior.
 
-These datasets can provide multiple types of information that the model can use. In their most simplest forms they can provide explicit examples of desired behavior (e.g. \enquote*{Given prompt X the expected response is Y}). These examples are normally actions that implicitly reflect the values of the labelers who created the dataset.
+These datasets can provide multiple types of information that the model can use. In their most simplest forms they can provide explicit examples of desired behavior (e.g. \enquote*{Given prompt X the expected response is Y}). In more complex setups the dataset can provide multiple possible responses with rankings or values given to each response. This ranking information can be used to provide a richer signal of what is desired and undesired behavior.
 
-In more complex setups the dataset can provide multiple possible responses with rankings or values given to each response. This ranking information can be used to provide a richer signal of what is desired behavior. The labelling of these datasets are usually done by humans, however using AI models to generate or augment these datasets is becoming more common \cite{baiConstitutionalAIHarmlessness2022}.
+The examples in the datasets can be thought of as actions that implicitly reflect the values of the labelers who created the dataset. The labelling of these datasets are usually done by humans who are contracted by the AI developers. Given high cost of labelling, using AI models to generate or augment these datasets is becoming more common \cite{baiConstitutionalAIHarmlessness2022, casperOpenProblemsFundamental2023,leeRLAIFVsRLHF2024}.
 
 \subsection{Alignment through supervised fine-tuning}
 
 A common first step of alignment is \term{supervised fine-tuning} (SFT) where a dataset of prompts and expected responses is used directly to train a model that \scare{It should respond like this}. This SFT step is typically used as the first step in many of the more complex alignment methods \cite{ouyangTrainingLanguageModels2022,rafailovDirectPreferenceOptimization2024,baiConstitutionalAIHarmlessness2022,leeRLAIFVsRLHF2024}.
 
-Depending on the dataset used the SFT step can help the model become better at following instructions \cite{ouyangTrainingLanguageModels2022}, domain specific knowledge and style \cite{liChatDoctorMedicalChat2023}, induce Chain-of-Thought reasoning \cite{weiChainofThoughtPromptingElicits2023}, change the values of the model \cite{nieSurveytoBehaviorDownstreamAlignment2025}, and many other capabilities. The SFT step is a powerful way way to cheaply and easily get a model to be in distribution of desired behavior.
+Depending on the dataset used the SFT step can help the model become better at following instructions \cite{ouyangTrainingLanguageModels2022}, domain specific knowledge and style \cite{liChatDoctorMedicalChat2023}, induce Chain-of-Thought reasoning \cite{weiChainofThoughtPromptingElicits2023}, change the values of the model \cite{nieSurveytoBehaviorDownstreamAlignment2025}, and many other capabilities. The SFT step is a powerful way to cheaply and easily get a model to be in distribution of desired behavior.
 
 It has been traditionally thought that SFT alone is insufficient to fully align a model to human preferences \cite{ouyangTrainingLanguageModels2022,baiConstitutionalAIHarmlessness2022}. However some work has suggested that SFT alone can be sufficient for value alignment \cite{nieSurveytoBehaviorDownstreamAlignment2025,zhouLIMALessMore2023}.
 
 \subsection{Alignment through preference optimization}
 
-SFT implicitly optimizes to the preferred response. However explicit \term{preference optimization} is a powerful next step which uses ranked responses rather than just the preferred response. The success of preference optimization methods relies on the ability of modern LLMs to generalize learned preferences to new contexts and prompts not seen during training.
+SFT implicitly optimizes to the preferred response. However explicit \term{preference optimization} is a powerful next step which uses ranked responses rather than just an expected response. The success of preference optimization methods relies on the ability of modern LLMs to generalize learned preferences to new contexts not seen in training.
 
-This preference data is usually (but not always) in the form of pairwise comparisons. That is given a prompt $x$, a pair of responses $i$ and $j$, the labellers (AI or human) indicate which response is preferred. For example $i \succ j$ indicates response $i$ is preferred over response $j$. If we have a dataset of these pairwise comparisons we can use the \term{Bradley-Terry model} \cite{bradleyRANKANALYSISINCOMPLETE1952} to create a maximum likelihood loss function
+This preference data is usually—but not always—in the form of pairwise comparisons. That is given a prompt $x$, a pair of responses $i$ and $j$, the labellers (AI or human) indicate which response is preferred. For example $i \succ j$ indicates response $i$ is preferred over response $j$. If we have a dataset of these pairwise comparisons we can use the \term{Bradley-Terry model} \cite{bradleyRANKANALYSISINCOMPLETE1952} to create a maximum likelihood loss function
 \begin{align}
     P(i \succ j \mid x) &= \frac{\pi_i}{\pi_i + \pi_j}, \\
     \mathcal{L}_{\mathrm{BT}} &= - \sum_{(x, i, j) \sim D} \log P(i \succ j \mid x) \\
@@ -143,33 +143,31 @@ This preference data is usually (but not always) in the form of pairwise compari
 \end{align}
 Where $\pi_i$ and $\pi_j$ are the scores of responses $i$ and $j$ respectively given prompt $x$. The way these scores are calculated depends on the specific preference optimization method used.
 
-The distribution of prompts in the preference dataset is crucial as it defines the context for which the model is expected to generalize its learned preferences. Therefore it important to ensure that the prompts used to create the preference dataset are sufficiently representative of the contexts and dimensions in which you are expecting the model to align its behavior.
+The distribution of prompts in the preference dataset is crucial as it defines the context for which the model is expected to generalize its learned preferences. Therefore it's important to ensure that the prompts used to create the preference dataset are sufficiently representative of the contexts and dimensions in which you are expecting the model to align its behavior.
 
-Creating preference data is a costly process which limits the size and diversity of the preference dataset \cite{casperOpenProblemsFundamental2023,leeRLAIFVsRLHF2024}. This results in most preference data being outsourced to cheap human labellers that label based on instructions provided by the model designers.
+The preference optimization methods provide a signal of what is wanted in a more abstracted sense. It relies on the model correctly inferring the underlying reward model (explicitly or implicitly) that generated the preferences. This can be hindered by inconsistent or noisy preferences which leads to the model learning a misaligned reward model.
 
 \subsection{Reinforcement Learning from Human Feedback}
 
-Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} uses the preference dataset to train a reward model and then a reinforcement learning algorithm to optimize the model based on this feedback. This method popularized post-training alignment and was used to train InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
+Reinforcement Learning from Human Feedback (RLHF) \cite{ouyangTrainingLanguageModels2022} uses the preference dataset to train a reward model (a small LLM) and then a reinforcement learning algorithm to optimize the model based on this feedback. This method popularized post-training alignment and was used to train InstructGPT which was smaller and better at following instructions compared to GPT-3 \cite{brownLanguageModelsAre2020, ouyangTrainingLanguageModels2022}.
 
 The key idea of RLHF is that the model gets feedback (\scare{from a human}) of how well it is doing while learning. This idea has been around for a while \cite{christianoDeepReinforcementLearning2017}. Yet RLHF was the first to use it successfully in LLMs and it quickly became a standard \cite{team2023gemini,baiQwenTechnicalReport2023,shaoDeepSeekMathPushingLimits2024}.
 
 \subsubsection{The three stages of RLHF}
 
-RLHF is separated into three distinct stages. Firstly is supervised fine-tuning (SFT) where a pre-trained language model is fine-tuned on a dataset of prompts and human written expected responses to those prompts.
+RLHF is separated into three distinct stages. Firstly is SFT where a pre-trained language model is fine-tuned on a dataset of prompts and human written expected responses to those prompts.
 
 The second step is collecting multiple responses from the SFT model to create a set of prompts and response, then having human labelers rank these responses from best to worst. This ranked data is then used to train a preference model (PM) that can predict which of two responses is better aligned to human preferences. The preference model is trained using a Bradley -Terry loss function where the scores $\pi_i$ is equal to $\exp(\text{PM}_\theta(x, i))$. This is fed into \ref{eq:bradley-terry-loss} to create the loss function for the preference model.
 
-Finally the fitted PM is used as a reward signal in the PPO \cite{schulmanProximalPolicyOptimization2017} RL algorithm to further fine-tune the SFT model and create the final RLHF model.
+Finally the trained PM is used as a reward signal in the PPO \cite{schulmanProximalPolicyOptimization2017} RL algorithm to further fine-tune the SFT model and create the final RLHF model.
 
 \subsection{Direct Preference Optimization}
 
-The idea presented in \cite{ouyangTrainingLanguageModels2022} introduces the concept of using human feedback to train large language models to be aligned to human preferences. However the process of RLHF is complex and requires training multiple models (SFT, PM, RLHF) and using a RL algorithm. Direct preference optimization (DPO) \cite{rafailovDirectPreferenceOptimization2024} is a method that simplifies this process by finding a closed form solution to the RLHF objective function and optimizing that directly.
-
-This has meant that DPO has become a standard and strong baseline for preference optimization methods.
+The idea presented in \cite{ouyangTrainingLanguageModels2022} introduces the concept of using human feedback to train large language models to be aligned to human preferences. However the process of RLHF is complex and requires training multiple models (SFT, PM, RLHF) and using a RL algorithm. Direct preference optimization (DPO) \cite{rafailovDirectPreferenceOptimization2024} is a method that simplifies this process by finding a closed form solution to the RLHF objective function and optimizing that directly. This has meant that DPO has become a standard and strong baseline for preference optimization methods.
 
 \subsubsection{How does DPO work?}
 
-DPO starts with the same preferences data as RLHF; a set of prompts with responses ranked by humans. Like RLHF, it starts with a pre-trained language model and is supervised fine-tuned on the prompts and highest ranked responses to create an SFT model. Instead of training a separate preference model DPO uses the SFT model as a reference model and defines the reward function $\hat{r}_\theta(x,y) = \log \pi_\theta(y|x) - \log \pi_{SFT}(y|x)$. Then by some derivation \cite{rafailovDirectPreferenceOptimization2024} it can be shown that the following loss function gradient can be used to optimize the Bradley Terry model directly on the preference data:
+DPO starts with the same preferences data as RLHF; a set of prompts with responses ranked by humans. Like RLHF, it starts with a pre-trained LLM and is supervised fine-tuned on the prompts and highest ranked responses to create an SFT model. Instead of training a separate preference model DPO uses the SFT model as a reference model and defines the reward function $\hat{r}_\theta(x,y) = \log \pi_\theta(y|x) - \log \pi_{SFT}(y|x)$. Then by some derivation \cite{rafailovDirectPreferenceOptimization2024} it can be shown that the following loss function gradient can be used to optimize the Bradley Terry model directly on the preference data:
 \begin{equation*}
 \begin{aligned}
 \nabla_\theta \mathcal{L}_{\mathrm{DPO}}(\theta)
@@ -203,7 +201,7 @@ Traditional preference optimization methods such as RLHF and DPO set out with th
 
 \subsubsection{Prospect Theory}
 
-KTO is built off the foundation of prospect theory \cite{tverskyAdvancesProspectTheory1992} which is a theory to explain how humans make decisions when dealing with uncertainty and risk \footnote{For example why when humans are given the choice between \$50 and a 50\% chance to win \$100, they often prefer the sure \$50, when they are both worth the same amount. Furthermore this effect is still present when the gamble is worth even more (\$110) \cite{kahnemanProspectTheory1979}}. It explains several cognitive biases that humans have when making decision involving risk, namely loss aversion (losses hit harder than gains), probability weighting (overweight small probabilities and underweight large probabilities), and reference dependence (we evaluate outcomes relative to a reference point which is usually the status quo). In relation to a LLM this means that when a human is evaluating the response of the model they are going to perceive the quality (utility) of the response in a biased way, so using a objective function that takes into account these biases (Human-aware) should lead to better alignment.
+KTO is built off the foundation of prospect theory \cite{tverskyAdvancesProspectTheory1992} which is a theory to explain how humans make decisions when dealing with uncertainty and risk \footnote{For example why when humans are given the choice between \$50 and a 50\% chance to win \$100, they often prefer the sure \$50, when they are both worth the same amount. Furthermore this effect is still present when the gamble has a higher expected payout (50\% at \$110 or a sure \$50) \cite{kahnemanProspectTheory1979}}. It explains several cognitive biases that humans have when making decision involving risk, namely loss aversion (losses hit harder than gains), probability weighting (overweight small probabilities and underweight large probabilities), and reference dependence (we evaluate outcomes relative to a reference point which is usually the status quo). In relation to a LLM this means that when a human is evaluating the response of the model they are going to perceive the quality (utility) of the response in a biased way, so using a objective function that takes into account these biases (Human-aware) should lead to better alignment.
 
 \begin{figure}[h!]
 \centering
@@ -269,7 +267,7 @@ There are three hyperparameters: $\beta$ is a risk aversion parameter, and $\lam
 
 KTO offers several key logistical and theoretical advantages over prior preference optimization methods, that make it an attractive method for alignment. 
 
-Firstly are the logistical advantage. Collecting the ranked preference data is expensive \cite{casperOpenProblemsFundamental2023} where binary like/dislike information cheaper to collect. KTO is shown to be more efficient and more robust to data imbalances than DPO (i.e most undesired examples with few desired examples). It is also less computationally intensive, a model of sufficient size ($\gtrsim$13B) does not need a SFT step prior to KTO so less training is needed and KTO has similar performance without using a reference model \footnote{This is done by assuming that the reference model returns a uniform distribution across all outputs given $x$} which halves the memory requirements when training. Secondly is that KTO is the first alignment method to explicitly take into account human cognitive biases when optimizing for alignment.
+Firstly are the logistical advantage. Collecting the ranked preference data is expensive \cite{casperOpenProblemsFundamental2023} where binary like/dislike information cheaper to collect. KTO is shown to be more efficient and more robust to data imbalances than DPO (i.e mostly undesired examples with few desired examples). It is also less computationally intensive, a model of sufficient size ($\gtrsim$13B) does not need a SFT step prior to KTO so less training is needed and KTO has similar performance without using a reference model \footnote{This is done by assuming that the reference model returns a uniform distribution across all outputs given $x$} which halves the memory requirements when training. Secondly is that KTO is the first alignment method to explicitly take into account human cognitive biases when optimizing for alignment.
 
 \subsection{Constitutional AI}
 
@@ -279,7 +277,7 @@ Constitutional AI (CAI) is a method of post-training a large language model to b
 
 \subsubsection{The process of Constitutional AI}
 
-CAI is a process that takes in a constitution, a pre-trained language model, and a dataset of prompts and outputs a model that is aligned to the constitution. The process consists of three main steps: self generative and supervised fine-tuning (SFT), preference modelling (PM), and reinforcement learning with human feedback (RLHF) \cite{baiConstitutionalAIHarmlessness2022}. The constitution itself was generated in an adhoc manner by the authors of \cite{baiConstitutionalAIHarmlessness2022} and consists of a set of principles that aim to make the model's outputs more helpful, honest, and harmless.
+CAI is a process that takes in a constitution, a pre-trained language model, and a dataset of prompts and outputs a model that is aligned to the constitution. The process consists of three main steps: self generative and SFT, preference modelling (PM), and reinforcement learning with human feedback (RLHF) \cite{baiConstitutionalAIHarmlessness2022}. The constitution itself was generated in an adhoc manner by the authors of \cite{baiConstitutionalAIHarmlessness2022} and consists of a set of principles that aim to make the model's outputs more helpful, honest, and harmless.
 
 \begin{figure}[h!]
     \centering
