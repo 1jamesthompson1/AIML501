@@ -15,7 +15,7 @@ This project sets out with some hypotheses around these research questions.
 
 
 \begin{enumerate}[label=\textbf{H\arabic*:}]
-    \item A small ($<$40B parameters) \term{open-weights} LLM has the ability to understand the survey questions and model a respondents values when given its responses. \\
+    \item A small ($<$40B parameters) \term{open-weights} LLM has the ability to understand the survey questions and model a respondent's values when given its responses. \\
     \textit{Justification:} Small LLMs have been shown to respond positively to fine tuning with value/opinion survey data with the result of better prediction of survey responses \cite{suhLanguageModelFineTuning2025}.
     
     \item Fine-tuning a base LLM by simply telling it which answers to a survey question is \scare{correct} will change its behavior in downstream tasks.\\
@@ -98,7 +98,7 @@ To evaluate the success of the alignment, I will need to develop an evaluation m
 
 The first evaluation method will involve holding out a set of survey questions from the training data. The test split will be done by splitting out questions that are semantically similar to each other and holding out different question templates. This will ensure that the model has at least some ability to generalize to unseen questions.
 
-The second evaluation method will involve getting the model to engage in various simulations of real world tasks. Then I will recruit participants from the various clusters defined in step 1 to rank which model actions best align with their values in these scenarios. This will provide a human-grounded evaluation of alignment success.
+The second evaluation method will involve getting the model to engage in various simulations of real-world tasks. Then I will recruit participants from the various clusters defined in step 1 to rank which model actions best align with their values in these scenarios. This will provide a human-grounded evaluation of alignment success.
 
 These evaluations combined will provide a robust measure of how well the model has understood the human values as well as how it actually affects its behavior in more realistic settings.
 
@@ -193,7 +193,7 @@ The initial alignment target will be defined using existing survey data from the
 
 \subsection{Public consultation responses}
 
-To create a rigorous evaluation of the alignment process a public consultation process will be needed. This will require recruiting participants from various clusters of the NZ population to provide feedback. Each participants will rate how much an AI agents actions (i.e responses) align with their values. I would expect to need at least 50 people from various countries to complete about a 30 minutes task (including instructions). The complete design of this is left to the research phase.
+To create a rigorous evaluation of the alignment process a public consultation process will be needed. This will require recruiting participants from various clusters of the NZ population to provide feedback. Each participant will rate how much an AI agent's actions (i.e., responses) align with their values. I would expect to need at least 50 people from various countries to complete about a 30 minutes task (including instructions). The complete design of this is left to the research phase.
 
 \section{Ethical considerations}
 
